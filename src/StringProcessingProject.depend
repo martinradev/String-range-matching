@@ -3,16 +3,24 @@
 	"Crochemore.hpp"
 	<iostream>
 
-1422147966 /home/martin/code/cpp/StringProcessingProject/src/Crochemore.hpp
+1422228411 /home/martin/code/cpp/StringProcessingProject/src/Crochemore.hpp
+	"Util.hpp"
 	<vector>
 	<string>
 	<algorithm>
 	<iostream>
-	<bitset>
 	<boost/dynamic_bitset.hpp>
 
 1422072333 source:/home/martin/code/cpp/StringProcessingProject/src/Crochemore.cpp
 	"Crochemore.hpp"
 	<algorithm>
 	<iostream>
+
+1422228315 source:/home/martin/code/cpp/StringProcessingProject/src/Util.cpp
+	"Util.hpp"
+
+1422228273 /home/martin/code/cpp/StringProcessingProject/src/Util.hpp
+	<vector>
+	<cstddef>
+	<boost/dynamic_bitset.hpp>
 

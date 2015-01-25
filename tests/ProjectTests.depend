@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1422146466 source:/home/martin/code/cpp/StringProcessingProject/tests/main.cpp
+1422228439 source:/home/martin/code/cpp/StringProcessingProject/tests/main.cpp
 	<iostream>
 	<string>
 	"../src/ProjectInc.hpp"
@@ -22,15 +22,16 @@
 	<exception>
 	<sstream>
 
-1422066999 /home/martin/code/cpp/StringProcessingProject/src/ProjectInc.hpp
+1422222364 /home/martin/code/cpp/StringProcessingProject/src/ProjectInc.hpp
 	"Crochemore.hpp"
+	"ZAlgorithm.hpp"
 
-1422147966 /home/martin/code/cpp/StringProcessingProject/src/Crochemore.hpp
+1422228411 /home/martin/code/cpp/StringProcessingProject/src/Crochemore.hpp
+	"Util.hpp"
 	<vector>
 	<string>
 	<algorithm>
 	<iostream>
-	<bitset>
 	<boost/dynamic_bitset.hpp>
 
 1422067578 /home/martin/code/cpp/StringProcessingProject/tests/check_macros.h
@@ -40,4 +41,15 @@
 	<iostream>
 	<string>
 	<cstring>
+
+1422228376 /home/martin/code/cpp/StringProcessingProject/src/ZAlgorithm.hpp
+	"Util.hpp"
+	<vector>
+	<string>
+	<boost/dynamic_bitset.hpp>
+
+1422228273 /home/martin/code/cpp/StringProcessingProject/src/Util.hpp
+	<vector>
+	<cstddef>
+	<boost/dynamic_bitset.hpp>
 

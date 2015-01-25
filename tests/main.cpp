@@ -33,10 +33,10 @@ TEST(CROCHEMORE, VEC) {
 int main()
 {
     TestSuite::run_tests();
-    boost::dynamic_bitset<> ss = lowerBound<char>("bebe", "bebe");
-    vector<size_t> positions = stringRangeMatch<char>("abcdefghijklmnopqrstuvz", "abcdefghijklmnopqrstuv", "g");
-    for (size_t i = 0; i < positions.size(); ++i) {
-        cout << positions[i] << " ";
-    }
+    std::string T = "abcdefghijklmnopqrstuvz";
+    std::string l = "ghiz";
+    std::string t = "g";
+    cout << lowerBound(T, l) << endl;
+    cout << lowerBoundZ(T, l) << endl;
     return 0;
 }

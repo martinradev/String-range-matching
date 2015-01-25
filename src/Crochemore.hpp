@@ -1,11 +1,12 @@
 #ifndef CROCHEMORE_HPP
 #define CROCHEMORE_HPP
 
+#include "Util.hpp"
+
 #include <vector>
 #include <string>
 #include <algorithm>
 #include <iostream>
-#include <bitset>
 #include <boost/dynamic_bitset.hpp>
 
 namespace str
@@ -193,38 +194,8 @@ std::vector<size_t> stringRangeMatch(const std::basic_string<T> & text, const st
 {
     boost::dynamic_bitset<> lowbits = lowerBound<T>(text,low);
     boost::dynamic_bitset<> topbits = lowerBound<T>(text,top);
-    /*
-        we have the bitsets for the lower and the upper bound
-        obviously the lower bound is a subset of the upper bound
-        namely if we have 1 for some index in the lower bound, the we have it in the upper bound
-        we have to set those bits to 0
-        we just have to do an XOR
-    */
-    lowbits ^= topbits;
 
-    /*
-        we have the bits now 1 where the suffix is in the given bound
-        we have to search for them.
-        lowbits.count() gives the count of the bits where we have 1
-    */
-    std::vector<size_t> positions(lowbits.count());
-    size_t i = lowbits.find_first();
-    size_t idx = 0;
-
-    /*
-        find the next bit's position and store the index
-        note that if one decides to stop using the bitset and use multiple memory blocks to work with
-        the best way to find the next bit set is to use the expression
-        (val & -val) which is equivalen to (val & (~val + 1)) due to 2-complement of how integers are stored in memory
-    */
-    while (i != lowbits.npos) {
-        positions[idx++] = i;
-        i = lowbits.find_next(i);
-    }
-
-    /*
-        explicitly move data
-    */
+    std::vector<size_t> positions = retrieveRangeIndices(lowbits, topbits);
     return std::move(positions);
 }
 
