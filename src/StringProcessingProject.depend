@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1422073341 source:/home/martin/code/cpp/StringProcessingProject/src/main.cpp
+	"Crochemore.hpp"
+	<iostream>
+
+1422147966 /home/martin/code/cpp/StringProcessingProject/src/Crochemore.hpp
+	<vector>
+	<string>
+	<algorithm>
+	<iostream>
+	<bitset>
+	<boost/dynamic_bitset.hpp>
+
+1422072333 source:/home/martin/code/cpp/StringProcessingProject/src/Crochemore.cpp
+	"Crochemore.hpp"
+	<algorithm>
+	<iostream>
+

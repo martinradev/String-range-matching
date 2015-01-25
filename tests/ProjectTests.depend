@@ -1,0 +1,43 @@
+# depslib dependency file v1.0
+1422146466 source:/home/martin/code/cpp/StringProcessingProject/tests/main.cpp
+	<iostream>
+	<string>
+	"../src/ProjectInc.hpp"
+	"TestSuite.h"
+	"check_macros.h"
+
+1422066878 source:/home/martin/code/cpp/StringProcessingProject/tests/TestSuite.cpp
+	"TestSuite.h"
+	"TestFailure.h"
+
+1422066875 /home/martin/code/cpp/StringProcessingProject/tests/TestSuite.h
+	<iostream>
+	<vector>
+	"UnitTest.h"
+
+1418578839 /home/martin/code/cpp/StringProcessingProject/tests/UnitTest.h
+	<iostream>
+
+1418578839 /home/martin/code/cpp/StringProcessingProject/tests/TestFailure.h
+	<exception>
+	<sstream>
+
+1422066999 /home/martin/code/cpp/StringProcessingProject/src/ProjectInc.hpp
+	"Crochemore.hpp"
+
+1422147966 /home/martin/code/cpp/StringProcessingProject/src/Crochemore.hpp
+	<vector>
+	<string>
+	<algorithm>
+	<iostream>
+	<bitset>
+	<boost/dynamic_bitset.hpp>
+
+1422067578 /home/martin/code/cpp/StringProcessingProject/tests/check_macros.h
+	"TestSuite.h"
+	"UnitTest.h"
+	"TestFailure.h"
+	<iostream>
+	<string>
+	<cstring>
+
