@@ -184,6 +184,10 @@ boost::dynamic_bitset<> lowerBound(const std::basic_string<T> & text, const std:
     return std::move(bits);
 }
 
+/*!
+    returns the starting positions of all suffixes in \a text which are lexicographically
+    in the range (low,top).
+*/
 template<typename T>
 std::vector<size_t> stringRangeMatch(const std::basic_string<T> & text, const std::basic_string<T> & low, const std::basic_string<T> & top)
 {
