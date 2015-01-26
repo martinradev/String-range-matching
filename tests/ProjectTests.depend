@@ -53,3 +53,73 @@
 	<cstddef>
 	<boost/dynamic_bitset.hpp>
 
+1422284145 source:/home/martin/C++ projects/String-range-matching/tests/main.cpp
+	<iostream>
+	<string>
+	"../src/ProjectInc.hpp"
+	"TestSuite.h"
+	"check_macros.h"
+	"sais.hxx"
+
+1422284145 /home/martin/C++ projects/String-range-matching/src/ProjectInc.hpp
+	"Crochemore.hpp"
+	"ZAlgorithm.hpp"
+
+1422284145 /home/martin/C++ projects/String-range-matching/src/Crochemore.hpp
+	"Util.hpp"
+	<vector>
+	<string>
+	<algorithm>
+	<iostream>
+	<boost/dynamic_bitset.hpp>
+
+1422284145 /home/martin/C++ projects/String-range-matching/src/Util.hpp
+	<vector>
+	<cstddef>
+	<boost/dynamic_bitset.hpp>
+
+1422284145 /home/martin/C++ projects/String-range-matching/src/ZAlgorithm.hpp
+	"Util.hpp"
+	<vector>
+	<string>
+	<boost/dynamic_bitset.hpp>
+
+1422284145 /home/martin/C++ projects/String-range-matching/tests/TestSuite.h
+	<iostream>
+	<vector>
+	"UnitTest.h"
+
+1422284145 /home/martin/C++ projects/String-range-matching/tests/UnitTest.h
+	<iostream>
+
+1422284145 /home/martin/C++ projects/String-range-matching/tests/check_macros.h
+	"TestSuite.h"
+	"UnitTest.h"
+	"TestFailure.h"
+	<iostream>
+	<string>
+	<cstring>
+
+1422284145 /home/martin/C++ projects/String-range-matching/tests/TestFailure.h
+	<exception>
+	<sstream>
+
+1422284145 /home/martin/C++ projects/String-range-matching/tests/sais.hxx
+	<cassert>
+	<iterator>
+	<limits>
+
+1422284145 source:/home/martin/C++ projects/String-range-matching/tests/TestSuite.cpp
+	"TestSuite.h"
+	"TestFailure.h"
+
+1422284595 source:/home/martin/C++ projects/String-range-matching/tests/SuffixArray.cpp
+	"SuffixArray.hpp"
+
+1422287391 /home/martin/C++ projects/String-range-matching/tests/SuffixArray.hpp
+	"sais.hxx"
+	<memory>
+	<vector>
+	<string>
+	<stdexcept>
+

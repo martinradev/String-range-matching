@@ -32,7 +32,15 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="SuffixArray.cpp" />
+		<Unit filename="SuffixArray.hpp" />
+		<Unit filename="TestFailure.h" />
+		<Unit filename="TestSuite.cpp" />
+		<Unit filename="TestSuite.h" />
+		<Unit filename="UnitTest.h" />
+		<Unit filename="check_macros.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="sais.hxx" />
 		<Extensions>
 			<code_completion />
 			<debugger />

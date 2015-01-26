@@ -38,6 +38,7 @@
 		<Unit filename="Crochemore.hpp" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
+			<Option target="Release" />
 		</Unit>
 		<Extensions>
 			<code_completion />

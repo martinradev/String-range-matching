@@ -24,3 +24,21 @@
 	<cstddef>
 	<boost/dynamic_bitset.hpp>
 
+1422284145 source:/home/martin/C++ projects/String-range-matching/src/Crochemore.cpp
+	"Crochemore.hpp"
+	<algorithm>
+	<iostream>
+
+1422284145 /home/martin/C++ projects/String-range-matching/src/Crochemore.hpp
+	"Util.hpp"
+	<vector>
+	<string>
+	<algorithm>
+	<iostream>
+	<boost/dynamic_bitset.hpp>
+
+1422284145 /home/martin/C++ projects/String-range-matching/src/Util.hpp
+	<vector>
+	<cstddef>
+	<boost/dynamic_bitset.hpp>
+
