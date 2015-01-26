@@ -3,6 +3,7 @@
 #include "../src/ProjectInc.hpp"
 #include "TestSuite.h"
 #include "check_macros.h"
+#include "sais.hxx"
 using namespace str;
 using namespace std;
 using namespace boost;
@@ -33,10 +34,13 @@ TEST(CROCHEMORE, VEC) {
 int main()
 {
     TestSuite::run_tests();
-    std::string T = "abcdefghijklmnopqrstuvz";
+    std::string T = "abcdefghijklmnopqarstuvz";
     std::string l = "ghiz";
     std::string t = "g";
-    cout << lowerBound(T, l) << endl;
-    cout << lowerBoundZ(T, l) << endl;
+    vector<int> saArr(T.length());
+    int err = saisxx(T.begin(), saArr.begin(), (int)T.length());
+    for (auto i : saArr) {
+        cout << i << " ";
+    }
     return 0;
 }

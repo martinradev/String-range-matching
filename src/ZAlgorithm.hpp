@@ -9,6 +9,10 @@
 
 namespace str
 {
+
+/*!
+
+*/
 template<typename T>
 boost::dynamic_bitset<> lowerBoundZ(const std::basic_string<T> & text, const std::basic_string<T> & pattern)
 {
@@ -79,6 +83,9 @@ boost::dynamic_bitset<> lowerBoundZ(const std::basic_string<T> & text, const std
     return bits;
 }
 
+/*!
+
+*/
 template<typename T>
 std::vector<size_t> stringRangeMatchZ(const std::basic_string<T> & text, const std::basic_string<T> & low, const std::basic_string<T> & top)
 {

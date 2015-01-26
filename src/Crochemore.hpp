@@ -95,7 +95,7 @@ std::vector<size_t> crochemoreSearch(const std::basic_string<T> & text, const st
             */
             positions.push_back(i);
         }
-        if (p <= l/3 && s != 0 && equal(pattern.begin(), pattern.begin()+s, pattern.begin()+p))
+        if (p <= l/3 && p != 0 && equal(pattern.begin(), pattern.begin()+s, pattern.begin()+p))
         {
             /*
                 we have that pattern[0..s) == pattern[p..p+s)
