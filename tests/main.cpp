@@ -3,6 +3,7 @@
 #include "../src/ProjectInc.hpp"
 #include "TestSuite.h"
 #include "check_macros.h"
+#include "SuffixArray.hpp"
 #include "sais.hxx"
 using namespace str;
 using namespace std;
@@ -33,14 +34,14 @@ TEST(CROCHEMORE, VEC) {
 
 int main()
 {
-    TestSuite::run_tests();
-    std::string T = "abcdefghijklmnopqarstuvz";
-    std::string l = "ghiz";
-    std::string t = "g";
-    vector<int> saArr(T.length());
-    int err = saisxx(T.begin(), saArr.begin(), (int)T.length());
-    for (auto i : saArr) {
-        cout << i << " ";
+    //TestSuite::run_tests();
+
+    std::string str = "banana";
+    SuffixArray<char> arr = SuffixArray<char>(&str);
+    vector<size_t> pos = arr.rangeQuery("0", "z");
+    for (int i = 0; i < pos.size(); ++i) {
+        cout << pos[i] << " ";
     }
+
     return 0;
 }

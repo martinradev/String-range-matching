@@ -53,12 +53,13 @@
 	<cstddef>
 	<boost/dynamic_bitset.hpp>
 
-1422284145 source:/home/martin/C++ projects/String-range-matching/tests/main.cpp
+1422307541 source:/home/martin/C++ projects/String-range-matching/tests/main.cpp
 	<iostream>
 	<string>
 	"../src/ProjectInc.hpp"
 	"TestSuite.h"
 	"check_macros.h"
+	"SuffixArray.hpp"
 	"sais.hxx"
 
 1422284145 /home/martin/C++ projects/String-range-matching/src/ProjectInc.hpp
@@ -116,10 +117,12 @@
 1422284595 source:/home/martin/C++ projects/String-range-matching/tests/SuffixArray.cpp
 	"SuffixArray.hpp"
 
-1422287391 /home/martin/C++ projects/String-range-matching/tests/SuffixArray.hpp
+1422308464 /home/martin/C++ projects/String-range-matching/tests/SuffixArray.hpp
 	"sais.hxx"
 	<memory>
 	<vector>
 	<string>
 	<stdexcept>
+	<algorithm>
+	<iostream>
 
