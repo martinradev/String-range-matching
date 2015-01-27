@@ -53,7 +53,7 @@
 	<cstddef>
 	<boost/dynamic_bitset.hpp>
 
-1422307541 source:/home/martin/C++ projects/String-range-matching/tests/main.cpp
+1422374466 source:/home/martin/C++ projects/String-range-matching/tests/main.cpp
 	<iostream>
 	<string>
 	"../src/ProjectInc.hpp"
@@ -62,11 +62,12 @@
 	"SuffixArray.hpp"
 	"sais.hxx"
 
-1422284145 /home/martin/C++ projects/String-range-matching/src/ProjectInc.hpp
+1422374648 /home/martin/C++ projects/String-range-matching/src/ProjectInc.hpp
 	"Crochemore.hpp"
 	"ZAlgorithm.hpp"
+	"Util.hpp"
 
-1422284145 /home/martin/C++ projects/String-range-matching/src/Crochemore.hpp
+1422374349 /home/martin/C++ projects/String-range-matching/src/Crochemore.hpp
 	"Util.hpp"
 	<vector>
 	<string>
@@ -74,7 +75,7 @@
 	<iostream>
 	<boost/dynamic_bitset.hpp>
 
-1422284145 /home/martin/C++ projects/String-range-matching/src/Util.hpp
+1422374759 /home/martin/C++ projects/String-range-matching/src/Util.hpp
 	<vector>
 	<cstddef>
 	<boost/dynamic_bitset.hpp>
@@ -117,7 +118,7 @@
 1422284595 source:/home/martin/C++ projects/String-range-matching/tests/SuffixArray.cpp
 	"SuffixArray.hpp"
 
-1422308464 /home/martin/C++ projects/String-range-matching/tests/SuffixArray.hpp
+1422374156 /home/martin/C++ projects/String-range-matching/tests/SuffixArray.hpp
 	"sais.hxx"
 	<memory>
 	<vector>
