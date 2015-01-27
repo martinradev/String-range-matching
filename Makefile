@@ -10,7 +10,7 @@ RSRCS=main.cpp Util.cpp
 
 TBIN=test
 TDIR=tests
-TSRCS=SuffixArray.cpp TestSuite.cpp main.cpp
+TSRCS=TestSuite.cpp main.cpp
 
 OUT=out
 BINOUT=$(OUT)/bin
