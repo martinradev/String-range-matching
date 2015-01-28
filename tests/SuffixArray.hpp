@@ -132,7 +132,6 @@ class SuffixArray {
     std::vector<size_t> rangeQuery(const std::basic_string<T> & bottom, const std::basic_string<T> & top) {
         int from = upperBound(bottom);
         int to = lowerBound(top);
-        std::cout << from << " " << to << std::endl;
         std::vector<size_t> positions(to-from+1);
         int i = 0;
         while (from+i <= to) {

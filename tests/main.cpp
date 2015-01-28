@@ -64,8 +64,20 @@ int main()
     TestSuite::run_tests();
 
     std::string str = "banana";
+    string from = "0";
+    string to = "z";
     SuffixArray<char> arr = SuffixArray<char>(&str);
-    vector<size_t> pos = arr.rangeQuery("0", "z");
+    vector<size_t> pos = arr.rangeQuery(from, to);
+    for (int i = 0; i < pos.size(); ++i) {
+        cout << pos[i] << " ";
+    }
+    cout << endl;
+    pos = str::stringRangeMatchZ(str, from, to);
+    for (int i = 0; i < pos.size(); ++i) {
+        cout << pos[i] << " ";
+    }
+    cout << endl;
+    pos = str::stringRangeMatch(str, from, to);
     for (int i = 0; i < pos.size(); ++i) {
         cout << pos[i] << " ";
     }

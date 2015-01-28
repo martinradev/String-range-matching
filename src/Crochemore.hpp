@@ -195,7 +195,7 @@ std::vector<size_t> stringRangeMatch(const std::basic_string<T> & text, const st
     boost::dynamic_bitset<> lowbits = lowerBound<T>(text,low);
     boost::dynamic_bitset<> topbits = lowerBound<T>(text,top);
 
-    std::vector<size_t> positions = retrieveRangeIndices(lowbits, topbits);
+    std::vector<size_t> positions = str::retrieveRangeIndices(lowbits, topbits);
     return std::move(positions);
 }
 

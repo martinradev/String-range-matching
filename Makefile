@@ -6,7 +6,7 @@ CPPFLAGS=-g -O2 -std=c++11
 
 RBIN=rmatch
 RDIR=src
-RSRCS=main.cpp Util.cpp
+RSRCS=rmatch.cpp
 
 TBIN=test
 TDIR=tests
