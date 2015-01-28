@@ -36,6 +36,11 @@ DEPENDDIR=$(dir $(DEPEND))
 .PHONY: all
 all: $(RFULLBIN) $(TFULLBIN)
 
+.PHONY: $(RBIN)
+$(RBIN): $(RFULLBIN)
+.PHONY: $(TBIN)
+$(TBIN): $(TFULLBIN)
+
 $(BINOUT)/$(RBIN): $(ROBJS) | $(BINOUT)
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 $(BINOUT)/$(TBIN): $(TOBJS) | $(BINOUT)
@@ -45,9 +50,11 @@ $(OUT)/%.o: %.cpp
 	$(CXX) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
 
 $(DEPEND): $(FULLSRCS) | $(DEPENDDIR)
-	$(CXX) -MM $(RFULLSRCS) | sed -e 's/^\([^ ]\)/$(EROBJDIR)\/\1/g' | \
+	$(CXX) $(CFLAGS) $(CPPFLAGS) -MM $(RFULLSRCS) | \
+		sed -e 's/^\([^ ]\)/$(EROBJDIR)\/\1/g' | \
 		sed -e 's/\([^\]\)$$/\1 | $(EROBJDIR)/g' > $@
-	$(CXX) -MM $(TFULLSRCS) | sed -e 's/^\([^ ]\)/$(ETOBJDIR)\/\1/g' | \
+	$(CXX) $(CFLAGS) $(CPPFLAGS) -MM $(TFULLSRCS) | \
+		sed -e 's/^\([^ ]\)/$(ETOBJDIR)\/\1/g' | \
 		sed -e 's/\([^\]\)$$/\1 | $(ETOBJDIR)/g' >> $@
 
 $(OUT):
