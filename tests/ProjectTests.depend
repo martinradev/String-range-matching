@@ -1,10 +1,11 @@
 # depslib dependency file v1.0
-1422228508 source:/home/martin/code/cpp/StringProcessingProject/tests/main.cpp
+1422240594 source:/home/martin/code/cpp/StringProcessingProject/tests/main.cpp
 	<iostream>
 	<string>
 	"../src/ProjectInc.hpp"
 	"TestSuite.h"
 	"check_macros.h"
+	"sais.hxx"
 
 1422066878 source:/home/martin/code/cpp/StringProcessingProject/tests/TestSuite.cpp
 	"TestSuite.h"
@@ -117,6 +118,21 @@
 	"SuffixArray.hpp"
 
 1422287391 /home/martin/C++ projects/String-range-matching/tests/SuffixArray.hpp
+	"sais.hxx"
+	<memory>
+	<vector>
+	<string>
+	<stdexcept>
+
+1281155993 /home/martin/code/cpp/StringProcessingProject/tests/sais.hxx
+	<cassert>
+	<iterator>
+	<limits>
+
+1422373319 source:/home/martin/code/cpp/StringProcessingProject/tests/SuffixArray.cpp
+	"SuffixArray.hpp"
+
+1422373319 /home/martin/code/cpp/StringProcessingProject/tests/SuffixArray.hpp
 	"sais.hxx"
 	<memory>
 	<vector>
