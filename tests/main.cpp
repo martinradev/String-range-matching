@@ -4,6 +4,7 @@
 #include "TestSuite.h"
 #include "SuffixArray.hpp"
 #include "check_macros.h"
+#include "SuffixArray.hpp"
 #include "sais.hxx"
 using namespace str;
 using namespace std;
@@ -34,10 +35,33 @@ TEST(CROCHEMORE, VEC) {
 
 int main()
 {
+<<<<<<< HEAD
     TestSuite::run_tests();
     std::string T = "banana";
     std::string lower = "a";
     std::string top = "n";
     SuffixArray sufArr(T);
+=======
+    //TestSuite::run_tests();
+
+    std::string str = "banana";
+    string from = "0";
+    string to = "z";
+    SuffixArray<char> arr = SuffixArray<char>(&str);
+    vector<size_t> pos = arr.rangeQuery(from, to);
+    for (int i = 0; i < pos.size(); ++i) {
+        cout << pos[i] << " ";
+    }
+    cout << endl;
+    pos = str::stringRangeMatchZ(str, from, to);
+    for (int i = 0; i < pos.size(); ++i) {
+        cout << pos[i] << " ";
+    }
+    cout << endl;
+    pos = str::stringRangeMatch(str, from, to);
+    for (int i = 0; i < pos.size(); ++i) {
+        cout << pos[i] << " ";
+    }
+>>>>>>> 5631f9e758c7904787024306851c008bd908e325
     return 0;
 }
