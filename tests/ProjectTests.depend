@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1422718078 source:/home/martin/code/cpp/StringProcessingProject/tests/main.cpp
+1422727741 source:/home/martin/code/cpp/StringProcessingProject/tests/main.cpp
 	<iostream>
 	<string>
 	"TestSuite.h"
@@ -149,7 +149,7 @@
 1422665604 source:/home/martin/code/cpp/StringProcessingProject/tests/TestCase.cpp
 	"TestCase.hpp"
 
-1422720116 /home/martin/code/cpp/StringProcessingProject/tests/TestCase.hpp
+1422728105 /home/martin/code/cpp/StringProcessingProject/tests/TestCase.hpp
 	"SuffixArray.hpp"
 	<fstream>
 	<vector>
@@ -179,17 +179,18 @@
 	<string>
 	<vector>
 
-1422717695 source:/home/martin/code/cpp/StringProcessingProject/tests/TestGenerator.cpp
+1422727908 source:/home/martin/code/cpp/StringProcessingProject/tests/TestGenerator.cpp
 	"TestGenerator.hpp"
 	<ctime>
 	<cstdlib>
 	<iostream>
 
-1422720333 /home/martin/code/cpp/StringProcessingProject/tests/TestGenerator.hpp
+1422722664 /home/martin/code/cpp/StringProcessingProject/tests/TestGenerator.hpp
 	"TestCase.hpp"
 	<string>
+	<istream>
 
-1422715227 source:/home/martin/code/cpp/StringProcessingProject/tests/ZAlgorithmTest.cpp
+1422719567 source:/home/martin/code/cpp/StringProcessingProject/tests/ZAlgorithmTest.cpp
 	"../src/ProjectInc.hpp"
 	"TestSuite.h"
 	"SuffixArray.hpp"

@@ -36,6 +36,7 @@
 		</Build>
 		<Unit filename="Crochemore.hpp" />
 		<Unit filename="ProjectInc.hpp" />
+		<Unit filename="Util.cpp" />
 		<Unit filename="Util.hpp" />
 		<Unit filename="ZAlgorithm.hpp" />
 		<Extensions>

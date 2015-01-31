@@ -12,8 +12,12 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-g" />
+					<Add option="-pedantic-errors" />
+					<Add option="-w" />
 				</Compiler>
+				<Linker>
+					<Add library="../src/bin/Debug/libStringProcessingProject.a" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/ProjectTests" prefix_auto="1" extension_auto="1" />
@@ -25,6 +29,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="../src/bin/Debug/libStringProcessingProject.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -32,12 +37,18 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="ChrochemoreTest.cpp" />
 		<Unit filename="SuffixArray.cpp" />
 		<Unit filename="SuffixArray.hpp" />
+		<Unit filename="SuffixArrayTest.cpp" />
+		<Unit filename="TestCase.hpp" />
 		<Unit filename="TestFailure.h" />
+		<Unit filename="TestGenerator.cpp" />
+		<Unit filename="TestGenerator.hpp" />
 		<Unit filename="TestSuite.cpp" />
 		<Unit filename="TestSuite.h" />
 		<Unit filename="UnitTest.h" />
+		<Unit filename="ZAlgorithmTest.cpp" />
 		<Unit filename="check_macros.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="sais.hxx" />
