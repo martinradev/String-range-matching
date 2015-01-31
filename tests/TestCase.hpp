@@ -77,8 +77,11 @@ class TestCase {
     */
     void save(const std::string & fileName) {
         std::ofstream out(fileName);
+        out << m_data.length() << std::endl;
         out << m_data << std::endl;
+        out << m_lowerBound.length() << std::endl;
         out << m_lowerBound << std::endl;
+        out << m_upperBound.length() << std::endl;
         out << m_upperBound << std::endl;
         out << m_output.size() << std::endl;
         for (index_type i : m_output) {

@@ -149,7 +149,7 @@
 1422665604 source:/home/martin/code/cpp/StringProcessingProject/tests/TestCase.cpp
 	"TestCase.hpp"
 
-1422686001 /home/martin/code/cpp/StringProcessingProject/tests/TestCase.hpp
+1422686454 /home/martin/code/cpp/StringProcessingProject/tests/TestCase.hpp
 	"SuffixArray.hpp"
 	<fstream>
 	<vector>
@@ -159,7 +159,7 @@
 	<string>
 	<map>
 
-1422685913 source:/home/martin/code/cpp/StringProcessingProject/tests/SuffixArrayTest.cpp
+1422686400 source:/home/martin/code/cpp/StringProcessingProject/tests/SuffixArrayTest.cpp
 	"TestSuite.h"
 	"SuffixArray.hpp"
 	"check_macros.h"
