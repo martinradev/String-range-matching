@@ -61,7 +61,7 @@ class SuffixArray {
         for (int i = 0; i < m_array.size(); ++i) {
             k=m_array_inv[i];
             j=m_array[k-1];
-            while (m_data[i+l]==m_data[j+l]) ++l;
+            while (i+l < m_data.length() && j+l < m_data.length                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     () && m_data[i+l]==m_data[j+l]) ++l;
             m_lcp[k] = l;
             if (l>0) --l;
         }
@@ -131,7 +131,14 @@ class SuffixArray {
     std::vector<size_t> rangeQuery(const std::basic_string<T> & bottom, const std::basic_string<T> & top) {
         int from = upperBound(bottom);
         int to = lowerBound(top);
-        std::vector<size_t> positions(to-from+1);
+        std::vector<size_t> positions;
+        if (from > to) {
+            /*
+                top is bigger than bottom
+            */
+            return positions;
+        }
+        positions.resize(to-from+1);
         int i = 0;
         while (from+i <= to) {
             positions[i] = m_array[from+i];

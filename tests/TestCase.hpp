@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <iterator>
 #include <string>
+#include <map>
 
 
 /*!
@@ -17,40 +18,8 @@
 */
 template<typename T, typename index_type = size_t>
 class TestCase {
-    private:
-    typedef std::basic_string<T> storage;
-    storage m_data;
-    storage m_lowerBound;
-    storage m_upperBound;
-    std::vector<index_type> m_output;
-    /*!
-        generates correct output for the stored \a m_output, \a m_lowerBound and \a m_upperBound
-    */
-    void generateOutput() {
-        SuffixArray<T> arr = SuffixArray<T, index_type>(m_data);
-        m_output = arr.rangeQuery(m_lowerBound, m_upperBound);
-        // sort to guarantee that order is preserved
-        std::sort(m_output.begin(), m_output.end());
-    }
-    /*!
-        reads the data from the stream
-        N
-        N elements of type T
-    */
-    void readDataInto(storage & container, std::istream & is) {
-        T tmp;
-        size_t sz;
-        is >> sz;
-        container.resize(sz);
-        while (sz--) {
-            container.push_back(tmp);
-        }
-        if (!is.good()) {
-            std::cerr << "Error reading" << std::endl;
-            exit(1);
-        }
-    };
     public:
+    typedef std::basic_string<T> storage;
     /*!
         Read the test case from a file.
         If the file does not exist or some error occurs during opening it,
@@ -85,10 +54,12 @@ class TestCase {
             in >> idx;
             m_output.push_back(idx);
         }
+        checkClassCondition();
     }
     TestCase(const storage & data, const storage & lowerBound, const storage & upperBound)
         : m_data(data), m_lowerBound(lowerBound), m_upperBound(upperBound)
     {
+        checkClassCondition();
         generateOutput();
     };
     /*!
@@ -97,6 +68,7 @@ class TestCase {
     TestCase(const storage & data, const storage & lowerBound, const storage & upperBound, const std::vector<index_type> & output)
         : m_data(data), m_lowerBound(lowerBound), m_upperBound(upperBound), m_output(output)
     {
+        checkClassCondition();
         // sort to guarantee that order is preserved
         std::sort(m_output.begin(), m_output.end());
     };
@@ -120,6 +92,74 @@ class TestCase {
         }
         return true;
     }
+    /*!
+        MUST BE USED FOR VERY SMALL TEST CASES
+        IF USED FOR TEXTS OF LENGTH BIGGER THAN 100, THE PROGRAM WILL EXIT
+    */
+    bool naiveCheck(const std::vector<index_type> & toBeChecked) {
+        if (m_data.length() > 100) {
+            std::cerr << "Text length is too big" << std::endl;
+            exit(1);
+        }
+        // suffix, index
+        std::map<storage, size_t> suffixes;
+        for (size_t i = 0; i < m_data.length(); ++i) {
+            suffixes.insert(std::make_pair(m_data.substr(i), i));
+        }
+        typename std::map<storage,size_t>::iterator low, up;
+        low = suffixes.upper_bound(m_lowerBound);
+        up = suffixes.lower_bound(m_upperBound);
+        std::vector<size_t> tmpOut;
+        tmpOut.reserve(m_data.length());
+        while (low != up) {
+            tmpOut.push_back(low->second);
+            ++low;
+        }
+        std::sort(tmpOut.begin(), tmpOut.end());
+        if (tmpOut.size() != toBeChecked.size()) return false;
+        for (size_t i = 0; i < tmpOut.size(); ++i) {
+            if (tmpOut[i] != toBeChecked[i]) return false;
+        }
+        return true;
+    }
+    const storage & getData() {return m_data;};
+    const storage & getLowerBound() {return m_lowerBound;};
+    const storage & getUpperBound() {return m_upperBound;};
+    private:
+    storage m_data;
+    storage m_lowerBound;
+    storage m_upperBound;
+    std::vector<index_type> m_output;
+    /*!
+        generates correct output for the stored \a m_output, \a m_lowerBound and \a m_upperBound
+    */
+    void generateOutput() {
+        SuffixArray<T> arr = SuffixArray<T>(m_data);
+        m_output = arr.rangeQuery(m_lowerBound, m_upperBound);
+        // sort to guarantee that order is preserved
+        std::sort(m_output.begin(), m_output.end());
+    }
+    /*!
+        reads the data from the stream
+        N
+        N elements of type T
+    */
+    void readDataInto(storage & container, std::istream & is) {
+        T tmp;
+        size_t sz;
+        is >> sz;
+        container.resize(sz);
+        while (sz--) {
+            container.push_back(tmp);
+        }
+        if (!is.good()) {
+            std::cerr << "Error reading" << std::endl;
+            exit(1);
+        }
+    };
+    void checkClassCondition() {
+        assert(m_lowerBound <= m_upperBound);
+    };
 };
 
 #endif // TEST_CASE_HPP

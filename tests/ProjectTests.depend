@@ -137,7 +137,7 @@
 1422373319 source:/home/martin/code/cpp/StringProcessingProject/tests/SuffixArray.cpp
 	"SuffixArray.hpp"
 
-1422671839 /home/martin/code/cpp/StringProcessingProject/tests/SuffixArray.hpp
+1422683088 /home/martin/code/cpp/StringProcessingProject/tests/SuffixArray.hpp
 	"sais.hxx"
 	<memory>
 	<vector>
@@ -149,7 +149,7 @@
 1422665604 source:/home/martin/code/cpp/StringProcessingProject/tests/TestCase.cpp
 	"TestCase.hpp"
 
-1422675992 /home/martin/code/cpp/StringProcessingProject/tests/TestCase.hpp
+1422683951 /home/martin/code/cpp/StringProcessingProject/tests/TestCase.hpp
 	"SuffixArray.hpp"
 	<fstream>
 	<vector>
@@ -157,12 +157,14 @@
 	<algorithm>
 	<iterator>
 	<string>
+	<map>
 
-1422675974 source:/home/martin/code/cpp/StringProcessingProject/tests/SuffixArrayTest.cpp
+1422683927 source:/home/martin/code/cpp/StringProcessingProject/tests/SuffixArrayTest.cpp
 	"TestSuite.h"
 	"SuffixArray.hpp"
 	"check_macros.h"
 	"TestCase.hpp"
+	"TestGenerator.hpp"
 	<string>
 	<algorithm>
 	<vector>
@@ -172,4 +174,14 @@
 	"TestSuite.h"
 	"SuffixArray.hpp"
 	"check_macros.h"
+
+1422683908 source:/home/martin/code/cpp/StringProcessingProject/tests/TestGenerator.cpp
+	"TestGenerator.hpp"
+	<ctime>
+	<cstdlib>
+	<iostream>
+
+1422683922 /home/martin/code/cpp/StringProcessingProject/tests/TestGenerator.hpp
+	"TestCase.hpp"
+	<string>
 
