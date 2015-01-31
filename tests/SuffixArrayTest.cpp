@@ -1,6 +1,3 @@
-#ifndef SUFFIX_ARRAY_TEST_HPP
-#define SUFFIX_ARRAY_TEST_HPP
-
 /*!
     Added to ensure that the suffix array works properly
 */
@@ -63,5 +60,3 @@ TEST(SUFFIX_ARRAY, TEST_GENERATOR_TEST_LOAD_FROM_FILE) {
     sort(out.begin(), out.end());
     CHECK_EQUAL(true, test.check(out));
 }
-
-#endif // SUFFIX_ARRAY_TEST_HPP

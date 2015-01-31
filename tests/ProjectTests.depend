@@ -28,7 +28,7 @@
 	"ZAlgorithm.hpp"
 	"Util.hpp"
 
-1422654355 /home/martin/code/cpp/StringProcessingProject/src/Crochemore.hpp
+1422714497 /home/martin/code/cpp/StringProcessingProject/src/Crochemore.hpp
 	"Util.hpp"
 	<vector>
 	<string>
@@ -169,11 +169,15 @@
 	<algorithm>
 	<vector>
 
-1422714439 source:/home/martin/code/cpp/StringProcessingProject/tests/ChrochemoreTest.cpp
+1422715013 source:/home/martin/code/cpp/StringProcessingProject/tests/ChrochemoreTest.cpp
 	"../src/ProjectInc.hpp"
 	"TestSuite.h"
 	"SuffixArray.hpp"
 	"check_macros.h"
+	"TestCase.hpp"
+	"TestGenerator.hpp"
+	<string>
+	<vector>
 
 1422683908 source:/home/martin/code/cpp/StringProcessingProject/tests/TestGenerator.cpp
 	"TestGenerator.hpp"
