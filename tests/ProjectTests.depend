@@ -1,9 +1,9 @@
 # depslib dependency file v1.0
-1422240594 source:/home/martin/code/cpp/StringProcessingProject/tests/main.cpp
+1422673989 source:/home/martin/code/cpp/StringProcessingProject/tests/main.cpp
 	<iostream>
 	<string>
-	"../src/ProjectInc.hpp"
 	"TestSuite.h"
+	"SuffixArray.hpp"
 	"check_macros.h"
 	"sais.hxx"
 
@@ -23,11 +23,12 @@
 	<exception>
 	<sstream>
 
-1422222364 /home/martin/code/cpp/StringProcessingProject/src/ProjectInc.hpp
+1422654355 /home/martin/code/cpp/StringProcessingProject/src/ProjectInc.hpp
 	"Crochemore.hpp"
 	"ZAlgorithm.hpp"
+	"Util.hpp"
 
-1422234994 /home/martin/code/cpp/StringProcessingProject/src/Crochemore.hpp
+1422654355 /home/martin/code/cpp/StringProcessingProject/src/Crochemore.hpp
 	"Util.hpp"
 	<vector>
 	<string>
@@ -49,7 +50,7 @@
 	<string>
 	<boost/dynamic_bitset.hpp>
 
-1422228273 /home/martin/code/cpp/StringProcessingProject/src/Util.hpp
+1422674259 /home/martin/code/cpp/StringProcessingProject/src/Util.hpp
 	<vector>
 	<cstddef>
 	<boost/dynamic_bitset.hpp>
@@ -136,10 +137,39 @@
 1422373319 source:/home/martin/code/cpp/StringProcessingProject/tests/SuffixArray.cpp
 	"SuffixArray.hpp"
 
-1422373319 /home/martin/code/cpp/StringProcessingProject/tests/SuffixArray.hpp
+1422671839 /home/martin/code/cpp/StringProcessingProject/tests/SuffixArray.hpp
 	"sais.hxx"
 	<memory>
 	<vector>
 	<string>
 	<stdexcept>
+	<algorithm>
+	<iostream>
+
+1422665604 source:/home/martin/code/cpp/StringProcessingProject/tests/TestCase.cpp
+	"TestCase.hpp"
+
+1422675992 /home/martin/code/cpp/StringProcessingProject/tests/TestCase.hpp
+	"SuffixArray.hpp"
+	<fstream>
+	<vector>
+	<iostream>
+	<algorithm>
+	<iterator>
+	<string>
+
+1422675974 source:/home/martin/code/cpp/StringProcessingProject/tests/SuffixArrayTest.cpp
+	"TestSuite.h"
+	"SuffixArray.hpp"
+	"check_macros.h"
+	"TestCase.hpp"
+	<string>
+	<algorithm>
+	<vector>
+
+1422673930 source:/home/martin/code/cpp/StringProcessingProject/tests/ChrochemoreTest.cpp
+	"../src/ProjectInc.hpp"
+	"TestSuite.h"
+	"SuffixArray.hpp"
+	"check_macros.h"
 

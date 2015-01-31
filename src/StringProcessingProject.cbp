@@ -34,12 +34,10 @@
 				</Linker>
 			</Target>
 		</Build>
-		<Unit filename="Crochemore.cpp" />
 		<Unit filename="Crochemore.hpp" />
-		<Unit filename="main.c">
-			<Option compilerVar="CC" />
-			<Option target="Release" />
-		</Unit>
+		<Unit filename="ProjectInc.hpp" />
+		<Unit filename="Util.hpp" />
+		<Unit filename="ZAlgorithm.hpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
