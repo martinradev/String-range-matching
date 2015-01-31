@@ -44,13 +44,13 @@
 	<string>
 	<cstring>
 
-1422229612 /home/martin/code/cpp/StringProcessingProject/src/ZAlgorithm.hpp
+1422714272 /home/martin/code/cpp/StringProcessingProject/src/ZAlgorithm.hpp
 	"Util.hpp"
 	<vector>
 	<string>
 	<boost/dynamic_bitset.hpp>
 
-1422674259 /home/martin/code/cpp/StringProcessingProject/src/Util.hpp
+1422714023 /home/martin/code/cpp/StringProcessingProject/src/Util.hpp
 	<vector>
 	<cstddef>
 	<boost/dynamic_bitset.hpp>
@@ -159,7 +159,7 @@
 	<string>
 	<map>
 
-1422686400 source:/home/martin/code/cpp/StringProcessingProject/tests/SuffixArrayTest.cpp
+1422686481 source:/home/martin/code/cpp/StringProcessingProject/tests/SuffixArrayTest.cpp
 	"TestSuite.h"
 	"SuffixArray.hpp"
 	"check_macros.h"
@@ -169,7 +169,7 @@
 	<algorithm>
 	<vector>
 
-1422673930 source:/home/martin/code/cpp/StringProcessingProject/tests/ChrochemoreTest.cpp
+1422714439 source:/home/martin/code/cpp/StringProcessingProject/tests/ChrochemoreTest.cpp
 	"../src/ProjectInc.hpp"
 	"TestSuite.h"
 	"SuffixArray.hpp"

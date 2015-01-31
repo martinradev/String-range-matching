@@ -160,7 +160,7 @@ boost::dynamic_bitset<> lowerBound(const std::basic_string<T> & text, const std:
             std::swap(p,pmax);
             imax = i;
         }
-        if ((0 < p && p <= l/3) && s != 0 && std::equal(pattern.begin(), pattern.begin()+s, pattern.begin()+p))
+        if ((0 < p && p <= l/3) && std::equal(pattern.begin(), pattern.begin()+s, pattern.begin()+p))
         {
             /*
                 we make a skip but we must copy the bit set in the range
