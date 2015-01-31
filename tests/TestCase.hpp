@@ -13,8 +13,9 @@
 
 
 /*!
-    TestCase entity which contains the text, the lower bound prefix and the upper bound prefix.
-    Also it contains the correct output.
+    TestCase entity which contains the text, the lower bound prefix, the upper bound prefix and
+    the correct output.
+    It supports loading test cases from files or saving a given test case.
 */
 template<typename T, typename index_type = size_t>
 class TestCase {
@@ -54,8 +55,15 @@ class TestCase {
             in >> idx;
             m_output.push_back(idx);
         }
+        in.close();
         checkClassCondition();
     }
+    /*!
+        Creates a test case given \a data text string, the lower bound \a lowerBound and
+        the upper bound \a upperBound.
+        The correct output is generated using the suffix array.
+        The program will exit with status 1 if \a lowerBound > \a upperBound.
+    */
     TestCase(const storage & data, const storage & lowerBound, const storage & upperBound)
         : m_data(data), m_lowerBound(lowerBound), m_upperBound(upperBound)
     {
@@ -64,6 +72,7 @@ class TestCase {
     };
     /*!
         initialize the test case by providing the input and output
+        The program will exit with status 1 if \a lowerBound > \a upperBound.
     */
     TestCase(const storage & data, const storage & lowerBound, const storage & upperBound, const std::vector<index_type> & output)
         : m_data(data), m_lowerBound(lowerBound), m_upperBound(upperBound), m_output(output)
@@ -73,7 +82,7 @@ class TestCase {
         std::sort(m_output.begin(), m_output.end());
     };
     /*!
-        save the test case to a given filename
+        save the test case to a given filename in a possible-to-load format.
     */
     void save(const std::string & fileName) {
         std::ofstream out(fileName);
@@ -87,7 +96,11 @@ class TestCase {
         for (index_type i : m_output) {
             out << i << " ";
         }
+        out.close();
     }
+    /*!
+        checks whether the \a toBeChecked output is correct against the test case.
+    */
     bool check(const std::vector<index_type> & toBeChecked) {
         if (m_output.size() != toBeChecked.size()) return false;
         for (size_t i = 0; i < m_output.size(); ++i) {
@@ -96,8 +109,9 @@ class TestCase {
         return true;
     }
     /*!
+        Does a naive check whether the output \a toBeChecked is correct.
         MUST BE USED FOR VERY SMALL TEST CASES
-        IF USED FOR TEXTS OF LENGTH BIGGER THAN 100, THE PROGRAM WILL EXIT
+        IF USED FOR TEXTS OF LENGTH BIGGER THAN 100, THE PROGRAM WILL EXIT OTHERWISE.
     */
     bool naiveCheck(const std::vector<index_type> & toBeChecked) {
         if (m_data.length() > 100) {
@@ -125,8 +139,17 @@ class TestCase {
         }
         return true;
     }
+    /*!
+        returns the text
+    */
     const storage & getData() {return m_data;};
+    /*!
+        returns the lower bound string
+    */
     const storage & getLowerBound() {return m_lowerBound;};
+    /*!
+        return the upper bound string
+    */
     const storage & getUpperBound() {return m_upperBound;};
     private:
     storage m_data;
@@ -135,6 +158,7 @@ class TestCase {
     std::vector<index_type> m_output;
     /*!
         generates correct output for the stored \a m_output, \a m_lowerBound and \a m_upperBound
+        it uses the \a SuffixArray wrapper to do so. Output is sorted.
     */
     void generateOutput() {
         SuffixArray<T> arr = SuffixArray<T>(m_data);
@@ -162,6 +186,10 @@ class TestCase {
             exit(1);
         }
     };
+    /*!
+        checks the class invariant
+        that \a m_lowerBound <= \a m_upperBound
+    */
     void checkClassCondition() {
         assert(m_lowerBound <= m_upperBound);
     };

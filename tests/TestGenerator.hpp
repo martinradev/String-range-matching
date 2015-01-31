@@ -5,6 +5,9 @@
 
 #include <string>
 
+/*!
+    Generates tests, random strings, etc
+*/
 class TestGenerator {
     public:
     /*!
@@ -16,8 +19,14 @@ class TestGenerator {
         \a lowBoundLen and upper bould of length \a topBoundLen.
     */
     TestCase<char> generateRandomTestCase(size_t textLen, size_t lowBoundLen, size_t topBoundLen);
+    /*!
+        generates a random string of length \a len
+    */
     std::string generateRandomString(size_t len);
     private:
+    /*!
+        generates a randomm letter
+    */
     char generateRandomLetter();
 
 };

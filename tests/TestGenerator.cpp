@@ -7,7 +7,7 @@ using namespace std;
 
 TestGenerator::TestGenerator() {
     srand(time(NULL));
-};
+}
 
 TestCase<char> TestGenerator::generateRandomTestCase(size_t textLen, size_t lowBoundLen, size_t topBoundLen) {
     string randomText = generateRandomString(textLen);

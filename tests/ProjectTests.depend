@@ -1,25 +1,25 @@
 # depslib dependency file v1.0
-1422685810 source:/home/martin/code/cpp/StringProcessingProject/tests/main.cpp
+1422718078 source:/home/martin/code/cpp/StringProcessingProject/tests/main.cpp
 	<iostream>
 	<string>
 	"TestSuite.h"
 	"SuffixArray.hpp"
 	"check_macros.h"
 	"sais.hxx"
+	"TestGenerator.hpp"
 
-1422066878 source:/home/martin/code/cpp/StringProcessingProject/tests/TestSuite.cpp
+1422717710 source:/home/martin/code/cpp/StringProcessingProject/tests/TestSuite.cpp
 	"TestSuite.h"
 	"TestFailure.h"
 
-1422066875 /home/martin/code/cpp/StringProcessingProject/tests/TestSuite.h
+1422720407 /home/martin/code/cpp/StringProcessingProject/tests/TestSuite.h
 	<iostream>
 	<vector>
 	"UnitTest.h"
 
-1418578839 /home/martin/code/cpp/StringProcessingProject/tests/UnitTest.h
-	<iostream>
+1422720422 /home/martin/code/cpp/StringProcessingProject/tests/UnitTest.h
 
-1418578839 /home/martin/code/cpp/StringProcessingProject/tests/TestFailure.h
+1422720151 /home/martin/code/cpp/StringProcessingProject/tests/TestFailure.h
 	<exception>
 	<sstream>
 
@@ -36,7 +36,7 @@
 	<iostream>
 	<boost/dynamic_bitset.hpp>
 
-1422067578 /home/martin/code/cpp/StringProcessingProject/tests/check_macros.h
+1422720440 /home/martin/code/cpp/StringProcessingProject/tests/check_macros.h
 	"TestSuite.h"
 	"UnitTest.h"
 	"TestFailure.h"
@@ -44,13 +44,13 @@
 	<string>
 	<cstring>
 
-1422714272 /home/martin/code/cpp/StringProcessingProject/src/ZAlgorithm.hpp
+1422717663 /home/martin/code/cpp/StringProcessingProject/src/ZAlgorithm.hpp
 	"Util.hpp"
 	<vector>
 	<string>
 	<boost/dynamic_bitset.hpp>
 
-1422714023 /home/martin/code/cpp/StringProcessingProject/src/Util.hpp
+1422717653 /home/martin/code/cpp/StringProcessingProject/src/Util.hpp
 	<vector>
 	<cstddef>
 	<boost/dynamic_bitset.hpp>
@@ -137,7 +137,7 @@
 1422373319 source:/home/martin/code/cpp/StringProcessingProject/tests/SuffixArray.cpp
 	"SuffixArray.hpp"
 
-1422683088 /home/martin/code/cpp/StringProcessingProject/tests/SuffixArray.hpp
+1422719814 /home/martin/code/cpp/StringProcessingProject/tests/SuffixArray.hpp
 	"sais.hxx"
 	<memory>
 	<vector>
@@ -149,7 +149,7 @@
 1422665604 source:/home/martin/code/cpp/StringProcessingProject/tests/TestCase.cpp
 	"TestCase.hpp"
 
-1422686454 /home/martin/code/cpp/StringProcessingProject/tests/TestCase.hpp
+1422720116 /home/martin/code/cpp/StringProcessingProject/tests/TestCase.hpp
 	"SuffixArray.hpp"
 	<fstream>
 	<vector>
@@ -159,7 +159,7 @@
 	<string>
 	<map>
 
-1422686481 source:/home/martin/code/cpp/StringProcessingProject/tests/SuffixArrayTest.cpp
+1422719430 source:/home/martin/code/cpp/StringProcessingProject/tests/SuffixArrayTest.cpp
 	"TestSuite.h"
 	"SuffixArray.hpp"
 	"check_macros.h"
@@ -169,7 +169,7 @@
 	<algorithm>
 	<vector>
 
-1422715013 source:/home/martin/code/cpp/StringProcessingProject/tests/ChrochemoreTest.cpp
+1422719305 source:/home/martin/code/cpp/StringProcessingProject/tests/ChrochemoreTest.cpp
 	"../src/ProjectInc.hpp"
 	"TestSuite.h"
 	"SuffixArray.hpp"
@@ -179,13 +179,23 @@
 	<string>
 	<vector>
 
-1422683908 source:/home/martin/code/cpp/StringProcessingProject/tests/TestGenerator.cpp
+1422717695 source:/home/martin/code/cpp/StringProcessingProject/tests/TestGenerator.cpp
 	"TestGenerator.hpp"
 	<ctime>
 	<cstdlib>
 	<iostream>
 
-1422683922 /home/martin/code/cpp/StringProcessingProject/tests/TestGenerator.hpp
+1422720333 /home/martin/code/cpp/StringProcessingProject/tests/TestGenerator.hpp
 	"TestCase.hpp"
 	<string>
+
+1422715227 source:/home/martin/code/cpp/StringProcessingProject/tests/ZAlgorithmTest.cpp
+	"../src/ProjectInc.hpp"
+	"TestSuite.h"
+	"SuffixArray.hpp"
+	"check_macros.h"
+	"TestCase.hpp"
+	"TestGenerator.hpp"
+	<string>
+	<vector>
 

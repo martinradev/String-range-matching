@@ -100,6 +100,6 @@ std::vector<size_t> stringRangeMatchZ(const std::basic_string<T> & text, const s
 
     return std::move(positions);
 }
-};
+}
 
 #endif // Z_ALGORITHM_HPP

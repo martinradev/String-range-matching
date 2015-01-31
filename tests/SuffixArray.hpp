@@ -10,9 +10,18 @@
 #include <algorithm>
 #include <iostream>
 
+
+/*!
+    Suffix array wrapper. It uses the SAIS algorithm, implementation of Yuta Mori in the file sais.hxx
+    It generates an lcp array and the inverse suffix array. It also supports range search over the suffixes.
+*/
 template<typename T, typename index_type = size_t>
 class SuffixArray {
     public:
+    /*!
+        Creates a suffix array given the \a data string.
+        Additionally, the inverse suffix array is constructed and the lcp array.
+    */
     SuffixArray(const std::basic_string<T> & data)
      : m_data(data), m_array(data.length()), m_array_inv(data.length()), m_lcp(data.length()) {
         int err = saisxx(m_data.begin(), m_array.begin(), (int)m_data.length());
@@ -21,11 +30,10 @@ class SuffixArray {
         }
         buildInv();
         buildLcp();
-        //buildBinaryLcp(0,data->length()-1);
     }
     public:
     /*!
-        pointer to string
+        data storred
     */
     std::basic_string<T> m_data;
 
@@ -126,7 +134,8 @@ class SuffixArray {
     }
 
     /*!
-
+        returns the starting positions of the suffixes which are
+        bigger than \a bottom and smaller than \a top.
     */
     std::vector<size_t> rangeQuery(const std::basic_string<T> & bottom, const std::basic_string<T> & top) {
         int from = upperBound(bottom);
