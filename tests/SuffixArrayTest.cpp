@@ -55,4 +55,13 @@ TEST(SUFFIX_ARRAY, TEST_GENERATOR_TEST) {
     CHECK_EQUAL(true, test.naiveCheck(out));
 }
 
+TEST(SUFFIX_ARRAY, TEST_GENERATOR_TEST_LOAD_FROM_FILE) {
+    TestGenerator generator;
+    TestCase<char> test = TestCase<char>("testcases/simple_test.txt");
+    SuffixArray<char> arr = SuffixArray<char>(test.getData());
+    vector<size_t> out = arr.rangeQuery(test.getLowerBound(), test.getUpperBound());
+    sort(out.begin(), out.end());
+    CHECK_EQUAL(true, test.check(out));
+}
+
 #endif // SUFFIX_ARRAY_TEST_HPP

@@ -8,11 +8,7 @@ using namespace std;
 
 int main()
 {
-
     TestSuite::run_tests();
-
-
-    //TestSuite::run_tests();
 
     return 0;
 }

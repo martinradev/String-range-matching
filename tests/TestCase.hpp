@@ -148,10 +148,12 @@ class TestCase {
         T tmp;
         size_t sz;
         is >> sz;
-        container.resize(sz);
+        container.reserve(sz);
         while (sz--) {
+            is >> tmp;
             container.push_back(tmp);
         }
+
         if (!is.good()) {
             std::cerr << "Error reading" << std::endl;
             exit(1);
