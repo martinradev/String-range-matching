@@ -1,6 +1,5 @@
 //#include "Crochemore.hpp"
 #include "one_sided_string_range_counting.hpp"
-#include "one_sided_string_range_counting_ostream.hpp"
 #include "naive_string_range_reporting.hpp"
 #include <iostream>
 #include <string>
@@ -22,7 +21,7 @@ struct input {
     string b;
     string e;
     method m;
-    int k;
+    size_t k;
     int s;
     int ret;
     input(): k(3), m(NAIVE), s(false), ret(0) {}
@@ -266,8 +265,7 @@ int main(int argc, char *const argv[])
             else run_naive(in);
             break;
         case COUNT:
-            c = str::one_sided_string_range_counting(in.t,in.e,in.k)-
-                str::one_sided_string_range_counting(in.t,in.b,in.k);
+            c = str::range_count(in.t,in.b,in.e,in.k);
             if (!in.s) printf("%d\n",c);
             break;
     }

@@ -2,7 +2,6 @@
 #define ONE_SIDED_STRING_RANGE_COUNTING_HPP
 
 #include "one_sided_string_range_counting_detail.hpp"
-#include <cstring>
 
 namespace str {
 namespace detail {
@@ -12,7 +11,7 @@ s_t<index_type> precompute(const string_type& y, index_type m, index_type k)
 {
     using namespace std;
     s_t<index_type> s;
-    add(s.n,1,0);
+    add(s.n,index_type(1),index_type(0));
     index_type i = 1, last = 1, l = 0, count = 0;
     while (i < m) { // Invariant: count = |y_[0..i) ∩ [ɛ,y)|
         while (i+l < m && y[i+l] == y[l]) ++l;
@@ -49,6 +48,7 @@ index_type one_sided_string_range_counting(
         const string_type& y, index_type m,
         index_type k)
 {
+    using namespace std;
     using namespace str::detail;
     s_t<index_type> s = precompute(y,m,k);
     index_type count = 0, i = 0, l = 0;
@@ -73,31 +73,26 @@ index_type one_sided_string_range_counting(
     return count;
 }
 
-template <typename string_type, typename size_type, typename index_type>
-index_type one_sided_string_range_counting(
-        const string_type& x, size_type n,
-        const string_type& y, size_type m,
+template <typename string_type, typename index_type>
+index_type range_count(
+        const string_type& t, index_type n,
+        const string_type& b, index_type m1,
+        const string_type& e, index_type m2,
         index_type k)
 {
-    return one_sided_string_range_counting(
-            x,static_cast<index_type>(n),
-            y,static_cast<index_type>(m),
-            k);
+    return
+        one_sided_string_range_counting(t,n,e,m2,k)-
+        one_sided_string_range_counting(t,n,b,m1,k);
 }
 
-
-template <typename string_type, typename index_type>
-index_type one_sided_string_range_counting(
-        const string_type& x, const string_type& y, index_type k)
+template <typename string_type>
+typename string_type::size_type range_count(
+        const string_type& t,
+        const string_type& b,
+        const string_type& e,
+        typename string_type::size_type k)
 {
-    return one_sided_string_range_counting(x,x.size(),y,y.size(),k);
-}
-
-template <typename index_type>
-index_type one_sided_string_range_counting(
-        const char *x, const char *y, index_type k)
-{
-    return one_sided_string_range_counting(x,strlen(x),y,strlen(y),k);
+    return range_count(t,t.size(),b,b.size(),e,e.size(),k);
 }
 
 } // str
