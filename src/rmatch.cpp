@@ -21,9 +21,9 @@ enum method {
 typedef basic_string<char,char_traits<char>,mallocator<char>> mstring;
 
 struct input {
-    string t;
-    string b;
-    string e;
+    mstring t;
+    mstring b;
+    mstring e;
     method m;
     size_t k;
     int s;
@@ -76,7 +76,8 @@ void nag(const char *app, const char *fmt...)
     va_end(args);
 }
 
-bool readfile(const char *file, string& s)
+template <typename string_type>
+bool readfile(const char *file, string_type& s)
 {
     ifstream t(file);
     if (!t.good()) return false;

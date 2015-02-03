@@ -23,11 +23,11 @@ void naive_range_match(
     }
 }
 
-template <typename char_type, typename output_iterator>
+template <typename string_type, typename output_iterator>
 void naive_range_match(
-        const std::basic_string<char_type>& t,
-        const std::basic_string<char_type>& b,
-        const std::basic_string<char_type>& e,
+        const string_type& t,
+        const string_type& b,
+        const string_type& e,
         output_iterator r)
 {
     naive_range_match(
