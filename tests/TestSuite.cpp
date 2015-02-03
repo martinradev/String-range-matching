@@ -3,7 +3,7 @@
 
 void TestSuite::add_test(UnitTest * test) {
     TestSuite::get_container().push_back(test);
-};
+}
 
 void TestSuite::run_tests() {
     std::vector<UnitTest*> local = TestSuite::get_container();
@@ -38,7 +38,7 @@ void TestSuite::run_tests() {
             std::cerr << std::endl << delimiter << std::endl << std::endl;
         }
     }
-};
+}
 
 std::vector<UnitTest*> & TestSuite::get_container() {
     static std::vector<UnitTest*> vt;

@@ -4,6 +4,9 @@
 #include <exception>
 #include <sstream>
 
+/*!
+    Test failure exception containing information about the failure.
+*/
 class TestFailure : public std::exception {
     private:
     const char * expr;

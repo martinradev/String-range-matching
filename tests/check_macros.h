@@ -8,11 +8,6 @@
 #include <string>
 #include <cstring>
 
-inline bool check_equal(int a, int b) {
-    if (a != b) return false;
-    return true;
-};
-
 inline const char * to_str(int num) {
     std::string s;
     while (num != 0) {
@@ -21,7 +16,7 @@ inline const char * to_str(int num) {
         s.insert(0,1,r+'0');
     }
     return s.c_str();
-};
+}
 
 
 #define CHECK_EQUAL(A,B) if (!(A == B)) \

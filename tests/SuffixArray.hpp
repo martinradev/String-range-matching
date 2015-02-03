@@ -10,24 +10,32 @@
 #include <algorithm>
 #include <iostream>
 
-template<typename T>
+
+/*!
+    Suffix array wrapper. It uses the SAIS algorithm, implementation of Yuta Mori in the file sais.hxx
+    It generates an lcp array and the inverse suffix array. It also supports range search over the suffixes.
+*/
+template<typename T, typename index_type = size_t>
 class SuffixArray {
     public:
-    SuffixArray(std::basic_string<T> * data)
-     : m_data(data), m_array(data->length()), m_array_inv(data->length()), m_lcp(data->length()) {
-        int err = saisxx((*m_data).begin(), m_array.begin(), (int)m_data->length());
+    /*!
+        Creates a suffix array given the \a data string.
+        Additionally, the inverse suffix array is constructed and the lcp array.
+    */
+    SuffixArray(const std::basic_string<T> & data)
+     : m_data(data), m_array(data.length()), m_array_inv(data.length()), m_lcp(data.length()) {
+        int err = saisxx(m_data.begin(), m_array.begin(), (int)m_data.length());
         if (err) {
             throw std::runtime_error("Could not create suffix array. Error: " + err);
         }
         buildInv();
         buildLcp();
-        //buildBinaryLcp(0,data->length()-1);
     }
     public:
     /*!
-        pointer to string
+        data storred
     */
-    std::basic_string<T> * m_data;
+    std::basic_string<T> m_data;
 
     /*!
         suffix array
@@ -61,7 +69,7 @@ class SuffixArray {
         for (int i = 0; i < m_array.size(); ++i) {
             k=m_array_inv[i];
             j=m_array[k-1];
-            while ((*m_data)[i+l]==(*m_data)[j+l]) ++l;
+            while (i+l < m_data.length() && j+l < m_data.length                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     () && m_data[i+l]==m_data[j+l]) ++l;
             m_lcp[k] = l;
             if (l>0) --l;
         }
@@ -81,9 +89,9 @@ class SuffixArray {
             i = off+idx;
             j = off;
 
-            while (i<m_data->length() && j < top.length() && (*m_data)[i] == top[j]) ++i, ++j;
+            while (i<m_data.length() && j < top.length() && m_data[i] == top[j]) ++i, ++j;
 
-            if ((*m_data)[i]<top[j]) {
+            if (m_data[i]<top[j]) {
                 l = mid+1;
                 lstr = j;
             } else {
@@ -104,17 +112,16 @@ class SuffixArray {
         int lstr = 0, rstr = 0, off = 0;
         int l = 0, r = m_array.size()-1;
         int i,j;
-        bool smaller;
         while (l<=r) {
             int mid = (l+r)>>1;
             int idx = m_array[mid];
             i = off+idx;
             j = off;
 
-            while (i<m_data->length() && j < bottom.length() && (*m_data)[i] == bottom[j]) ++i, ++j;
+            while (i<m_data.length() && j < bottom.length() && m_data[i] == bottom[j]) ++i, ++j;
 
             // go right on pattern smaller or equal
-            if ((*m_data)[i] > bottom[j]) {
+            if (m_data[i] > bottom[j]) {
                 rstr = j;
                 r = mid-1;
             } else {
@@ -127,12 +134,20 @@ class SuffixArray {
     }
 
     /*!
-
+        returns the starting positions of the suffixes which are
+        bigger than \a bottom and smaller than \a top.
     */
     std::vector<size_t> rangeQuery(const std::basic_string<T> & bottom, const std::basic_string<T> & top) {
         int from = upperBound(bottom);
         int to = lowerBound(top);
-        std::vector<size_t> positions(to-from+1);
+        std::vector<size_t> positions;
+        if (from > to) {
+            /*
+                top is bigger than bottom
+            */
+            return positions;
+        }
+        positions.resize(to-from+1);
         int i = 0;
         while (from+i <= to) {
             positions[i] = m_array[from+i];

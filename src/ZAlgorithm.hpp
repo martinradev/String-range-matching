@@ -11,7 +11,10 @@ namespace str
 {
 
 /*!
-
+    Finds the suffixes of \a text which are smaller than pattern
+    It returns a bit vector where if the i-th bit is turned on, then
+    this means that text[i..) < pattern.
+    The function uses the Z algorithm to find the suffixes.
 */
 template<typename T>
 boost::dynamic_bitset<> lowerBoundZ(const std::basic_string<T> & text, const std::basic_string<T> & pattern)
@@ -80,11 +83,12 @@ boost::dynamic_bitset<> lowerBoundZ(const std::basic_string<T> & text, const std
         }
         ++i;
     }
-    return bits;
+    return std::move(bits);
 }
 
 /*!
-
+    Finds all of the suffixes of \a text which are bigger than \a low and smaller than \a top.
+    The positions are returned.
 */
 template<typename T>
 std::vector<size_t> stringRangeMatchZ(const std::basic_string<T> & text, const std::basic_string<T> & low, const std::basic_string<T> & top)
@@ -96,6 +100,6 @@ std::vector<size_t> stringRangeMatchZ(const std::basic_string<T> & text, const s
 
     return std::move(positions);
 }
-};
+}
 
 #endif // Z_ALGORITHM_HPP
