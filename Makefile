@@ -2,7 +2,7 @@
 MKDIR=mkdir -p
 RM=rm -rf
 CXX=g++
-CPPFLAGS=-g -O2 -std=c++11
+CPPFLAGS=-g -std=c++11
 
 RBIN=rmatch
 RDIR=src
@@ -57,6 +57,35 @@ $(DEPEND): $(FULLSRCS) | $(DEPENDDIR)
 		sed -e 's/^\([^ ]\)/$(ETOBJDIR)\/\1/g' | \
 		sed -e 's/\([^\]\)$$/\1 | $(ETOBJDIR)/g' >> $@
 
+# test data
+
+TESTDATADIR=testcases
+
+TESTDATA=dblp.xml.00001.1 dblp.xml.00001.2
+# dna.001.1
+TESTDATAURL=http://pizzachili.dcc.uchile.cl/repcorpus/pseudo-real/
+ZIPSUFFIX=.7z
+
+TESTDATAZIP=$(addsuffix $(ZIPSUFFIX),$(TESTDATA))
+REMOTETESTDATA=$(addprefix $(TESTDATAURL)/,$(TESTDATAZIP))
+LOCALTESTDATA=$(addprefix $(TESTDATADIR)/,$(TESTDATA))
+LOCALTESTDATAZIP=$(addprefix $(TESTDATADIR)/,$(TESTDATAZIP))
+
+.PHONY: testdata
+testdata: $(LOCALTESTDATA)
+
+$(LOCALTESTDATAZIP): %: | $(TESTDATADIR)
+	cd $(TESTDATADIR) && curl -O $(TESTDATAURL)$(notdir $@)
+
+$(LOCALTESTDATA): %: %$(ZIPSUFFIX)
+	7z x -o$(TESTDATADIR) $@$(ZIPSUFFIX)
+
+# memtest
+
+MEMTESTDIR=$(OUT)/memtest
+
+#valgrind --tool=massif --stacks=yes --massif-out-file=massif.out ./out/bin/rmatch -m count -f ./testcases/dblp.xml.00001.1.10000 asdf qwer
+
 $(OUT):
 	$(MKDIR) $@
 $(BINOUT):
@@ -67,9 +96,16 @@ $(ROBJDIR):
 	$(MKDIR) $@
 $(TOBJDIR):
 	$(MKDIR) $@
+$(TESTDATADIR):
+	$(MKDIR) $@
+
+
+.PHONY: clean-testdata
+clean-testdata:
+	$(RM) $(TESTDATADIR)
 
 .PHONY: clean
 clean:
-	rm -rf $(OUT)
+	$(RM) $(OUT)
 
 include $(DEPEND)
