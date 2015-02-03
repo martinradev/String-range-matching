@@ -1,7 +1,7 @@
-#ifndef ONE_SIDED_STRING_RANGE_COUNTING_HPP
-#define ONE_SIDED_STRING_RANGE_COUNTING_HPP
+#ifndef RANGE_COUNT_HPP
+#define RANGE_COUNT_HPP
 
-#include "one_sided_string_range_counting_detail.hpp"
+#include "range_count_detail.hpp"
 
 namespace str {
 namespace detail {
@@ -43,7 +43,7 @@ s_t<index_type> precompute(const string_type& y, index_type m, index_type k)
 } // detail
 
 template <typename string_type, typename index_type>
-index_type one_sided_string_range_counting(
+index_type one_sided_range_count(
         const string_type& x, index_type n,
         const string_type& y, index_type m,
         index_type k)
@@ -81,8 +81,8 @@ index_type range_count(
         index_type k)
 {
     return
-        one_sided_string_range_counting(t,n,e,m2,k)-
-        one_sided_string_range_counting(t,n,b,m1,k);
+        one_sided_range_count(t,n,e,m2,k)-
+        one_sided_range_count(t,n,b,m1,k);
 }
 
 template <typename string_type>

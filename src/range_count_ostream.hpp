@@ -1,7 +1,7 @@
-#ifndef ONE_SIDED_STRING_RANGE_COUNTING_OSTREAM_HPP
-#define ONE_SIDED_STRING_RANGE_COUNTING_OSTREAM_HPP
+#ifndef RANGE_COUNT_OSTREAM_HPP
+#define RANGE_COUNT_OSTREAM_HPP
 
-#include "one_sided_string_range_counting.hpp"
+#include "range_count_detail.hpp"
 #include <ostream>
 
 namespace str {

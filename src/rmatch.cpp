@@ -1,6 +1,6 @@
 //#include "Crochemore.hpp"
-#include "one_sided_string_range_counting.hpp"
-#include "naive_string_range_reporting.hpp"
+#include "range_count.hpp"
+#include "naive_range_match.hpp"
 #include <iostream>
 #include <string>
 #include <fstream>

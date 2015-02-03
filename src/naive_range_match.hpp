@@ -1,5 +1,5 @@
-#ifndef NAIVE_STRING_RANGE_REPORTING_HPP
-#define NAIVE_STRING_RANGE_REPORTING_HPP
+#ifndef NAIVE_RANGE_MATCH_HPP
+#define NAIVE_RANGE_MATCH_HPP
 
 #include <algorithm>
 #include <string>
