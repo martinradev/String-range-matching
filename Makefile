@@ -2,7 +2,7 @@
 MKDIR=mkdir -p
 RM=rm -rf
 CXX=g++
-CPPFLAGS=-g -O2 -std=c++11
+CPPFLAGS=-std=c++11
 
 RBIN=rmatch
 RDIR=src

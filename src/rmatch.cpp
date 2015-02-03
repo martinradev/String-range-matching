@@ -18,6 +18,8 @@ enum method {
     COUNT
 };
 
+typedef basic_string<char,char_traits<char>,mallocator<char>> mstring;
+
 struct input {
     string t;
     string b;
