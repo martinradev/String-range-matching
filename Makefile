@@ -2,11 +2,11 @@
 MKDIR=mkdir -p
 RM=rm -rf
 CXX=g++
-CPPFLAGS=-g -std=c++11
+CPPFLAGS=-g -O2 -std=c++11
 
 RBIN=rmatch
 RDIR=src
-RSRCS=rmatch.cpp
+RSRCS=rmatch.cpp mallocate.cpp
 
 TBIN=test
 TDIR=tests
@@ -84,6 +84,12 @@ $(LOCALTESTDATA): %: %$(ZIPSUFFIX)
 
 MEMTESTDIR=$(OUT)/memtest
 
+.PHONY: memtest
+memtest: $(RFULLBIN) $(LOCALTESTDATA) | $(MEMTESTDIR)
+	valgrind --tool=massif --massif-out-file=$(MEMTESTDIR)/massif.out \
+		--ignore-fn=mallocate --stacks=yes \
+		$(RFULLBIN) -s -f $(TESTDATADIR)/dblp.xml.00001.1 asdf qwer
+
 #valgrind --tool=massif --stacks=yes --massif-out-file=massif.out ./out/bin/rmatch -m count -f ./testcases/dblp.xml.00001.1.10000 asdf qwer
 
 $(OUT):
@@ -97,6 +103,8 @@ $(ROBJDIR):
 $(TOBJDIR):
 	$(MKDIR) $@
 $(TESTDATADIR):
+	$(MKDIR) $@
+$(MEMTESTDIR):
 	$(MKDIR) $@
 
 

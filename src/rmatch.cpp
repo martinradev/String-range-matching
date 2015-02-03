@@ -1,9 +1,11 @@
 //#include "Crochemore.hpp"
 #include "range_count.hpp"
 #include "naive_range_match.hpp"
+#include "mallocate.hpp"
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <iterator>
 #include <cstdlib>
 #include <cstring>
 #include <cstdarg>
@@ -180,89 +182,36 @@ extern "C" bool init(int argc, char *const argv[], input& in)
     return true;
 }
 
-// the following stuff enables us to exclude output vector allocations
-// from memory profiling
-
-struct output {
-    vector<size_t> s;
+template <typename C>
+struct push_back_iterator: public back_insert_iterator<C> {
+    push_back_iterator(C& c): back_insert_iterator<C>(c) {}
 };
 
-// this can be ignored in valgrind for accurate memory profiling
-extern "C" void push_back(output *out, size_t x)
-{
-    out->s.push_back(x);
+namespace std {
+template <typename C>
+struct iterator_traits<push_back_iterator<C>>:
+public iterator_traits<back_insert_iterator<C>> {
+    typedef typename C::value_type value_type;
+};
 }
 
-struct push_back_it {
-    output *o;
-    push_back_it(output& o): o(&o) {}
-    size_t& operator=(size_t x) { push_back(o,x); return o->s.back(); }
-    push_back_it& operator*() { return *this; }
-    push_back_it& operator++() { return *this; }
-};
-
-namespace std {
-
-template <>
-struct iterator_traits<push_back_it> {
-    typedef size_t value_type;
-};
-
-} // std
-
-struct print_it {
-    size_t n;
-    size_t& operator=(size_t x) { cout << x << '\n'; return n; }
-    print_it& operator*() { return *this; }
-    print_it& operator++() { return *this; }
-};
-
-namespace std {
-
-template <>
-struct iterator_traits<print_it> {
-    typedef size_t value_type;
-};
-
-} // std
-
-// no-operation output iterator, use this for accurate memory profiling
-
-struct nop_it {
-    int n;
-    int& operator=(int) { return n; }
-    nop_it& operator*() { return *this; }
-    nop_it& operator++() { return *this; }
-};
-
-namespace std {
-
-template <>
-struct iterator_traits<nop_it> {
-    typedef int value_type;
-};
-
-} // std
-
-void run_naive(const input& in)
+template <typename C>
+push_back_iterator<C> push_backer(C& c)
 {
-    str::naive_range_match(in.t,in.b,in.e,print_it());
-}
-
-void run_naive_silent(const input& in)
-{
-    str::naive_range_match(in.t,in.b,in.e,nop_it());
+    return push_back_iterator<C>(c);
 }
 
 int main(int argc, char *const argv[])
 {
     input in;
+    vector<size_t,mallocator<size_t>> out;
     size_t c;
     if (!init(argc, argv, in)) return in.ret;
     switch (in.m) {
         case NAIVE:
-            if (in.s) run_naive_silent(in);
-            else run_naive(in);
+            str::naive_range_match(in.t,in.b,in.e,push_backer(out));
+            if (in.s) break;
+            for (auto v: out) cout << v << '\n';
             break;
         case COUNT:
             c = str::range_count(in.t,in.b,in.e,in.k);
