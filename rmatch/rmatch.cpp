@@ -1,8 +1,10 @@
 #include "Crochemore.hpp"
 #include "ZAlgorithm.hpp"
+#include "SuffixArray.hpp"
 #include "range_count.hpp"
 #include "naive_range_match.hpp"
 #include "mallocate.hpp"
+#include "timer.hpp"
 #include <string>
 #include <fstream>
 #include <limits>
@@ -18,7 +20,8 @@ enum method {
     NAIVE,
     GS,
     C,
-    Z
+    Z,
+    SA
 };
 
 typedef basic_string<char,char_traits<char>,mallocator<char>> mstring;
@@ -57,7 +60,8 @@ Mandatory arguments to long options are mandatory for short options too.
   -h, --help           display this help and exit
   -m, --method=METHOD  set the matching algorithm; possible values are "n"
                          (naive O(nm) search), "gs" (Galil-Seiferas count), "c"
-                         (Crochemore) or "z" (Z-algorithm); default is "n"
+                         (Crochemore), "z" (Z-algorithm) or "sa" (suffix array
+                         search); default is "n"
   -k, --k=VALUE        run range match count k set to VALUE, only has effect if
                          METHOD is "gs"; k must be larger or equal to 3,
                          default is 3
@@ -145,6 +149,8 @@ bool init(int argc, char *const argv[], input& in)
                     in.m = C;
                 } else if (!strcmp(optarg,"z")) {
                     in.m = Z;
+                } else if (!strcmp(optarg,"sa")) {
+                    in.m = SA;
                 } else {
                     nag(app,"unknown method \"%s\"\n",optarg);
                     return fail(in);
@@ -219,52 +225,36 @@ bool init(int argc, char *const argv[], input& in)
     return true;
 }
 
-struct timer {
-    typedef std::chrono::time_point<std::chrono::high_resolution_clock> time;
-    time start;
-    bool print;
-    timer(bool print):
-        start(std::chrono::high_resolution_clock::now()),
-        print(print) {}
-    ~timer()
-    {
-        using namespace std;
-        using namespace std::chrono;
-        auto stop = high_resolution_clock::now();
-        auto span = duration_cast<duration<double>>(stop-start).count();
-        if (!print) return;
-        printf("%f\n",span);
-    }
-};
-
 int main(int argc, char *const argv[])
 {
     using namespace str;
+
     input in;
+    if (!init(argc, argv, in)) return in.ret;
+
     vector<size_t,mallocator<size_t>> out;
     size_t c;
-    if (!init(argc, argv, in)) return in.ret;
     timer t(in.p);
     switch (in.m) {
         case NAIVE:
             naive_range_match(in.t,in.b,in.e,back_inserter(out));
-            if (in.s) break;
-            for (auto v: out) printf("%d\n",v);
             break;
         case GS:
             c = range_count(in.t,in.b,in.e,in.k);
-            if (!in.s) printf("%d\n",c);
             break;
         case C:
             stringRangeMatch(in.t,in.b,in.e,out);
-            if (in.s) break;
-            for (auto v: out) printf("%d\n",v);
             break;
         case Z:
             stringRangeMatchZ(in.t,in.b,in.e,out);
-            if (in.s) break;
-            for (auto v: out) printf("%d\n",v);
+            break;
+        case SA:
+            rangeQuery(in.t,in.b,in.e,out);
             break;
     }
+    t.stop();
+
+    if (!in.s && in.m != GS) for (auto v: out) printf("%d\n",v);
+    if (!in.s && in.m == GS) printf("%d\n",c);
     return 0;
 }

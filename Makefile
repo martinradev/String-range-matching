@@ -6,7 +6,7 @@ CPPFLAGS=$(CPPSTD) -O2
 
 RBIN=rmatch
 RDIR=rmatch
-RSRCS=rmatch.cpp mallocate.cpp
+RSRCS=rmatch.cpp mallocate.cpp timer.cpp
 
 TBIN=test
 TDIR=test
@@ -97,7 +97,7 @@ MASSIFCMD=bash ./scripts/massif.sh
 
 $(MEMTESTOUT): $(MEMTESTDIR)/$(MEMTESTPREFIX)%: $(RFULLBIN) $(TESTDATADIR)/% | \
 		$(MEMTESTDIR)
-	$(MASSIFCMD) $@ $(RFULLBIN) -m count -c 1000000 -s -f $< asdf qwer
+	$(MASSIFCMD) $@ $(RFULLBIN) -m c -c 1000000 -s -f $< asdf qwer
 
 .PHONY: clean-memtest
 clean-memtest:

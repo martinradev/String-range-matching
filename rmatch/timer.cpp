@@ -1,0 +1,31 @@
+#include "timer.hpp"
+#include <cstdio>
+
+timer::timer():
+    start(std::chrono::high_resolution_clock::now()),
+    stopped(false),
+    print(true)
+{
+}
+
+timer::timer(bool print):
+    start(std::chrono::high_resolution_clock::now()),
+    stopped(false),
+    print(print)
+{
+}
+
+timer::~timer()
+{
+    stop();
+    if (print) printf("%f\n",span);
+}
+
+void timer::stop()
+{
+    using namespace std::chrono;
+    auto stop = high_resolution_clock::now();
+    if (stopped) return;
+    span = duration_cast<duration<double>>(stop-start).count();
+    stopped = true;
+}
