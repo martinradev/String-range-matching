@@ -1,4 +1,4 @@
-#include "../src/ProjectInc.hpp"
+#include "ProjectInc.hpp"
 #include "TestSuite.h"
 #include "SuffixArray.hpp"
 #include "check_macros.h"

@@ -5,7 +5,7 @@
 #include "check_macros.h"
 #include "sais.hxx"
 #include "TestGenerator.hpp"
-#include "../src/ProjectInc.hpp"
+#include "ProjectInc.hpp"
 #include <ctime>
 using namespace std;
 
