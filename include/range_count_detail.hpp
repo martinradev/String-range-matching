@@ -23,17 +23,17 @@ struct bc_t {
 
 template <typename index_type>
 struct s_p_t {
-		typedef std::vector<bec_t<index_type>> type;
+    typedef std::vector<bec_t<index_type>> type;
 };
 
 template <typename index_type>
 struct s_n_t {
-		typedef std::vector<bc_t<index_type>> type;
+    typedef std::vector<bc_t<index_type>> type;
 };
 
 template <typename index_type>
 void add(typename s_p_t<index_type>::type& s_p, index_type b, index_type e,
-				index_type c)
+        index_type c)
 {
     s_p.emplace_back(b,e,c);
 }
