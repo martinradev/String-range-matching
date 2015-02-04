@@ -16,11 +16,11 @@ namespace str
     this means that text[i..) < pattern.
     The function uses the Z algorithm to find the suffixes.
 */
-template<typename T>
-boost::dynamic_bitset<> lowerBoundZ(const std::basic_string<T> & text, const std::basic_string<T> & pattern)
+template<typename string_type>
+boost::dynamic_bitset<> lowerBoundZ(const string_type & text, const string_type & pattern)
 {
     boost::dynamic_bitset<> bits = boost::dynamic_bitset<>(text.length());
-    std::basic_string<T> total = pattern + text;
+    string_type total = pattern + text;
     std::vector<size_t> prefixes(pattern.length() + text.length());
     size_t l = 0, r = 0;
     prefixes[0] = total.length();
@@ -86,18 +86,23 @@ boost::dynamic_bitset<> lowerBoundZ(const std::basic_string<T> & text, const std
     return std::move(bits);
 }
 
+template <typename string_type, typename output_container>
+void stringRangeMatchZ(const string_type & text, const string_type & low, const string_type & top, output_container& positions)
+{
+    boost::dynamic_bitset<> lowbits = lowerBoundZ(text,low);
+    boost::dynamic_bitset<> topbits = lowerBoundZ(text,top);
+    retrieveRangeIndices(lowbits,topbits,positions);
+}
+
 /*!
     Finds all of the suffixes of \a text which are bigger than \a low and smaller than \a top.
     The positions are returned.
 */
-template<typename T>
-std::vector<size_t> stringRangeMatchZ(const std::basic_string<T> & text, const std::basic_string<T> & low, const std::basic_string<T> & top)
+template<typename string_type>
+std::vector<size_t> stringRangeMatchZ(const string_type & text, const string_type & low, const string_type & top)
 {
-    boost::dynamic_bitset<> lowbits = lowerBoundZ<T>(text,low);
-    boost::dynamic_bitset<> topbits = lowerBoundZ<T>(text,top);
-
-    std::vector<size_t> positions = retrieveRangeIndices(lowbits, topbits);
-
+    std::vector<size_t> positions;
+    stringRangeMatchZ(text,low,top,positions);
     return std::move(positions);
 }
 }

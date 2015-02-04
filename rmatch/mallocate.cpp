@@ -6,3 +6,8 @@ void *mallocate(size_t bytes)
 {
     return ::operator new(bytes,std::nothrow);
 }
+
+void mdeallocate(void *ptr)
+{
+    ::operator delete(ptr);
+}

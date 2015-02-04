@@ -7,6 +7,7 @@
 #include <string>
 #include <algorithm>
 #include <iostream>
+#include <iterator>
 #include <boost/dynamic_bitset.hpp>
 
 namespace str
@@ -20,8 +21,8 @@ namespace str
     Function is needed later in determining the jump to make by checking whether
     per(pattern[0..l]) == per(MS(pattern[0..l]))
 */
-template<typename T>
-void updateMS(const std::basic_string<T> & pattern, size_t & l, size_t & s, size_t & p)
+template<typename string_type>
+void updateMS(const string_type & pattern, size_t & l, size_t & s, size_t & p)
 {
     if (l == 0)
     {
@@ -119,7 +120,7 @@ std::vector<size_t> crochemoreSearch(const std::basic_string<T> & text, const st
     /*
         use strict move semantics to prevent copying of data no matter the compiler
     */
-    return move(positions);
+    return std::move(positions);
 }
 
 /*!
@@ -127,8 +128,8 @@ std::vector<size_t> crochemoreSearch(const std::basic_string<T> & text, const st
     bit[i] = 1 then text[i...) < pattern
     bit[i] = 0 else
 */
-template<typename T>
-boost::dynamic_bitset<> lowerBound(const std::basic_string<T> & text, const std::basic_string<T> & pattern)
+template<typename string_type>
+boost::dynamic_bitset<> lowerBound(const string_type & text, const string_type & pattern)
 {
     boost::dynamic_bitset<> bits = boost::dynamic_bitset<>(text.length());
     size_t i=0, l = 0, p = 0, s = 0, j = 0;
@@ -185,17 +186,24 @@ boost::dynamic_bitset<> lowerBound(const std::basic_string<T> & text, const std:
     return std::move(bits);
 }
 
+template<typename string_type, typename output_container>
+void stringRangeMatch(const string_type & text, const string_type & low, const string_type & top, output_container& positions)
+{
+    using namespace std;
+    boost::dynamic_bitset<> lowbits = lowerBound(text,low);
+    boost::dynamic_bitset<> topbits = lowerBound(text,top);
+    str::retrieveRangeIndices(lowbits,topbits,positions);
+}
+
 /*!
     returns the starting positions of all suffixes in \a text which are lexicographically
     in the range (low,top).
 */
-template<typename T>
-std::vector<size_t> stringRangeMatch(const std::basic_string<T> & text, const std::basic_string<T> & low, const std::basic_string<T> & top)
+template<typename string_type>
+std::vector<size_t> stringRangeMatch(const string_type & text, const string_type & low, const string_type & top)
 {
-    boost::dynamic_bitset<> lowbits = lowerBound<T>(text,low);
-    boost::dynamic_bitset<> topbits = lowerBound<T>(text,top);
-
-    std::vector<size_t> positions = str::retrieveRangeIndices(lowbits, topbits);
+    std::vector<size_t> positions;
+    stringRangeMatch(text,low,top,positions);
     return std::move(positions);
 }
 

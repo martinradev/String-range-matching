@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <string>
 #include <iterator>
+#include <type_traits>
 
 namespace str {
 
@@ -15,7 +16,9 @@ void naive_range_match(
         output_iterator r)
 {
     using namespace std;
-    typename iterator_traits<output_iterator>::value_type i = 0;
+    typedef typename iterator_traits<input_iterator>::difference_type diff;
+    typedef typename make_unsigned<diff>::type size_type;
+    size_type i = 0;
     for (; ti != te; ++ti, ++i, ++r) {
         if (
                  lexicographical_compare(ti,te,ei,ee) &&

@@ -1,7 +1,7 @@
 MKDIR=mkdir -p
 RM=rm -rf
 CXX=g++
-CPPSTD=-std=c++0x -I./include
+CPPSTD=-g -std=c++0x -I./include
 CPPFLAGS=$(CPPSTD) -O2
 
 RBIN=rmatch
@@ -49,13 +49,13 @@ $(ROBJDIR)/mallocate.o: $(RDIR)/mallocate.cpp | $(ROBJDIR)
 	$(CXX) -c $(CPPSTD) -o $@ $<
 
 $(OUT)/%.o: %.cpp
-	$(CXX) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
+	$(CXX) -c $(CPPFLAGS) -o $@ $<
 
 FIXDEP=bash ./scripts/fix_depend.sh
 
 $(DEPEND): $(FULLSRCS) | $(DEPENDDIR)
-	$(CXX) $(CFLAGS) $(CPPFLAGS) -MM $(RFULLSRCS) | $(FIXDEP) "$(EROBJDIR)" > $@
-	$(CXX) $(CFLAGS) $(CPPFLAGS) -MM $(TFULLSRCS) | $(FIXDEP) "$(ETOBJDIR)" >> $@
+	$(CXX) $(CPPFLAGS) -MM $(RFULLSRCS) | $(FIXDEP) "$(EROBJDIR)" > $@
+	$(CXX) $(CPPFLAGS) -MM $(TFULLSRCS) | $(FIXDEP) "$(ETOBJDIR)" >> $@
 
 # test data
 
@@ -87,7 +87,7 @@ clean-testdata:
 # memtest
 
 MEMTESTDIR=$(OUT)/memtest
-MEMTESTPREFIX=massif.
+MEMTESTPREFIX=massif.out.
 MEMTESTOUT=$(addprefix $(MEMTESTDIR)/$(MEMTESTPREFIX),$(TESTDATA))
 
 .PHONY: memtest

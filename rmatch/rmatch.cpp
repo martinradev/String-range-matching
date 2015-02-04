@@ -1,9 +1,8 @@
-//#include "Crochemore.hpp"
+#include "Crochemore.hpp"
+#include "ZAlgorithm.hpp"
 #include "range_count.hpp"
 #include "naive_range_match.hpp"
 #include "mallocate.hpp"
-#include "push_back_iterator.hpp"
-#include <iostream>
 #include <string>
 #include <fstream>
 #include <limits>
@@ -17,7 +16,9 @@ using namespace std;
 
 enum method {
     NAIVE,
-    COUNT
+    GS,
+    C,
+    Z
 };
 
 typedef basic_string<char,char_traits<char>,mallocator<char>> mstring;
@@ -54,10 +55,11 @@ const option opts[] = {
 const char *help_str = R"STR(
 Mandatory arguments to long options are mandatory for short options too.
   -h, --help           display this help and exit
-  -m, --method=METHOD  set the matching algorithm; possible values are "naive",
-                         or "count", default is "naive"
+  -m, --method=METHOD  set the matching algorithm; possible values are "n"
+                         (naive O(nm) search), "gs" (Galil-Seiferas count), "c"
+                         (Crochemore) or "z" (Z-algorithm); default is "n"
   -k, --k=VALUE        run range match count k set to VALUE, only has effect if
-                         METHOD is "count"; k must be larger or equal to 3,
+                         METHOD is "gs"; k must be larger or equal to 3,
                          default is 3
   -s, --silent         do not produce any output; if -p is set, timing output
                        will still be printed
@@ -137,10 +139,14 @@ bool init(int argc, char *const argv[], input& in)
             case 'm':
                 if (!strcmp(optarg,"naive")) {
                     in.m = NAIVE;
-                } else if (!strcmp(optarg,"count")) {
-                    in.m = COUNT;
+                } else if (!strcmp(optarg,"gs")) {
+                    in.m = GS;
+                } else if (!strcmp(optarg,"c")) {
+                    in.m = C;
+                } else if (!strcmp(optarg,"z")) {
+                    in.m = Z;
                 } else {
-                    nag(app,"uknown method \"%s\"\n",optarg);
+                    nag(app,"unknown method \"%s\"\n",optarg);
                     return fail(in);
                 }
                 break;
@@ -227,13 +233,13 @@ struct timer {
         auto stop = high_resolution_clock::now();
         auto span = duration_cast<duration<double>>(stop-start).count();
         if (!print) return;
-        cout << span << "\n";
+        printf("%f\n",span);
     }
 };
 
 int main(int argc, char *const argv[])
 {
-    using namespace chrono;
+    using namespace str;
     input in;
     vector<size_t,mallocator<size_t>> out;
     size_t c;
@@ -241,13 +247,23 @@ int main(int argc, char *const argv[])
     timer t(in.p);
     switch (in.m) {
         case NAIVE:
-            str::naive_range_match(in.t,in.b,in.e,push_backer(out));
+            naive_range_match(in.t,in.b,in.e,back_inserter(out));
             if (in.s) break;
-            for (auto v: out) cout << v << '\n';
+            for (auto v: out) printf("%d\n",v);
             break;
-        case COUNT:
-            c = str::range_count(in.t,in.b,in.e,in.k);
+        case GS:
+            c = range_count(in.t,in.b,in.e,in.k);
             if (!in.s) printf("%d\n",c);
+            break;
+        case C:
+            stringRangeMatch(in.t,in.b,in.e,out);
+            if (in.s) break;
+            for (auto v: out) printf("%d\n",v);
+            break;
+        case Z:
+            stringRangeMatchZ(in.t,in.b,in.e,out);
+            if (in.s) break;
+            for (auto v: out) printf("%d\n",v);
             break;
     }
     return 0;

@@ -2,8 +2,10 @@
 #define UTIL_HPP
 
 #include <vector>
+#include <iterator>
 #include <cstddef>
 #include <boost/dynamic_bitset.hpp>
+#include <iostream>
 
 namespace str {
     /*!
@@ -11,9 +13,11 @@ namespace str {
         bits for which we have ones only in either one of them
         It returns the positions of those bits.
     */
-    inline std::vector<size_t> retrieveRangeIndices(
+    template <typename output_container>
+    void retrieveRangeIndices(
             const boost::dynamic_bitset<> & lowbits,
-            const boost::dynamic_bitset<> & topbits)
+            const boost::dynamic_bitset<> & topbits,
+            output_container& positions)
     {
         /*
             we have the bitsets for the lower and the upper bound
@@ -29,9 +33,9 @@ namespace str {
             we have to search for them.
             XOR.count() gives the count of the bits where we have 1
         */
-        std::vector<size_t> positions(XOR.count());
+        positions.reserve(XOR.count());
+
         size_t i = XOR.find_first();
-        size_t idx = 0;
 
         /*
             find the next bit's position and store the index
@@ -41,13 +45,17 @@ namespace str {
         */
         while (i != XOR.npos)
         {
-            positions[idx++] = i;
+            positions.push_back(i);
             i = XOR.find_next(i);
         }
+    }
 
-        /*
-            explicitly move data
-        */
+    inline std::vector<size_t> retrieveRangeIndices(
+            const boost::dynamic_bitset<> & lowbits,
+            const boost::dynamic_bitset<> & topbits)
+    {
+        std::vector<size_t> positions;
+        retrieveRangeIndices(lowbits,topbits,positions);
         return std::move(positions);
     }
 }
