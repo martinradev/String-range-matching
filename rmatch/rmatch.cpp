@@ -84,7 +84,7 @@ void usage(FILE *f, const char *app)
 void help(FILE *f, const char *app)
 {
     usage(f,app);
-    fprintf(f,help_str);
+    fprintf(f,"%s",help_str);
 }
 
 void nag(const char *app, const char *fmt...)
@@ -254,7 +254,7 @@ int main(int argc, char *const argv[])
     }
     t.stop();
 
-    if (!in.s && in.m != GS) for (auto v: out) printf("%d\n",v);
-    if (!in.s && in.m == GS) printf("%d\n",c);
+    if (!in.s && in.m != GS) for (auto v: out) printf("%ld\n",v);
+    if (!in.s && in.m == GS) printf("%ld\n",c);
     return 0;
 }

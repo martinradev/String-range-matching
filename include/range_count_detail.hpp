@@ -21,17 +21,25 @@ struct bc_t {
     bc_t(index_type b, index_type c): b(b), c(c) {}
 };
 
-template <typename index_type> using s_p_t = std::vector<bec_t<index_type>>;
-template <typename index_type> using s_n_t = std::vector<bc_t<index_type>>;
+template <typename index_type>
+struct s_p_t {
+		typedef std::vector<bec_t<index_type>> type;
+};
 
 template <typename index_type>
-void add(s_p_t<index_type>& s_p, index_type b, index_type e, index_type c)
+struct s_n_t {
+		typedef std::vector<bc_t<index_type>> type;
+};
+
+template <typename index_type>
+void add(typename s_p_t<index_type>::type& s_p, index_type b, index_type e,
+				index_type c)
 {
     s_p.emplace_back(b,e,c);
 }
 
 template <typename index_type>
-void add(s_n_t<index_type>& s_n, index_type b, index_type c)
+void add(typename s_n_t<index_type>::type& s_n, index_type b, index_type c)
 {
     s_n.emplace_back(b,c);
 }
@@ -48,7 +56,7 @@ typename list_type::size_type bin_search_b(const list_type& l, index_type x)
 }
 
 template <typename index_type>
-void pred(const s_n_t<index_type>& s_n, index_type x,
+void pred(const typename s_n_t<index_type>::type& s_n, index_type x,
         index_type *b, index_type *c)
 {
     auto i = bin_search_b(s_n,x);
@@ -57,7 +65,7 @@ void pred(const s_n_t<index_type>& s_n, index_type x,
 }
 
 template <typename index_type>
-void contains(const s_p_t<index_type>& s_p, index_type x,
+void contains(const typename s_p_t<index_type>::type& s_p, index_type x,
         index_type *b, index_type *e, index_type *c)
 {
     if (s_p.empty()) {
@@ -76,8 +84,8 @@ void contains(const s_p_t<index_type>& s_p, index_type x,
 
 template <typename index_type>
 struct s_t {
-    s_p_t<index_type> p;
-    s_n_t<index_type> n;
+    typename s_p_t<index_type>::type p;
+    typename s_n_t<index_type>::type n;
 };
 
 } // detail
