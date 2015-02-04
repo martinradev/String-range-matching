@@ -1,8 +1,8 @@
-# config
 MKDIR=mkdir -p
 RM=rm -rf
 CXX=g++
-CPPFLAGS=-std=c++11
+CPPSTD=-std=c++0x
+CPPFLAGS=$(CPPSTD) -O2
 
 RBIN=rmatch
 RDIR=src
@@ -15,8 +15,6 @@ TSRCS=TestSuite.cpp main.cpp
 OUT=out
 BINOUT=$(OUT)/bin
 DEPEND=$(OUT)/depend
-
-#
 
 RFULLSRCS=$(addprefix $(RDIR)/,$(RSRCS))
 ROBJDIR=$(OUT)/$(RDIR)
@@ -46,6 +44,10 @@ $(BINOUT)/$(RBIN): $(ROBJS) | $(BINOUT)
 $(BINOUT)/$(TBIN): $(TOBJS) | $(BINOUT)
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
+# disable optimization for this file
+$(ROBJDIR)/mallocate.o: $(RDIR)/mallocate.cpp | $(ROBJDIR)
+	$(CXX) -c $(CPPSTD) -o $@ $<
+
 $(OUT)/%.o: %.cpp
 	$(CXX) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
 
@@ -62,7 +64,6 @@ $(DEPEND): $(FULLSRCS) | $(DEPENDDIR)
 TESTDATADIR=testcases
 
 TESTDATA=dblp.xml.00001.1 dblp.xml.00001.2
-# dna.001.1
 TESTDATAURL=http://pizzachili.dcc.uchile.cl/repcorpus/pseudo-real/
 ZIPSUFFIX=.7z
 
@@ -79,18 +80,31 @@ $(LOCALTESTDATAZIP): %: | $(TESTDATADIR)
 
 $(LOCALTESTDATA): %: %$(ZIPSUFFIX)
 	7z x -o$(TESTDATADIR) $@$(ZIPSUFFIX)
+	touch $@
+
+.PHONY: clean-testdata
+clean-testdata:
+	$(RM) $(TESTDATADIR)
 
 # memtest
 
 MEMTESTDIR=$(OUT)/memtest
+MEMTESTPREFIX=massif.
+MEMTESTOUT=$(addprefix $(MEMTESTDIR)/$(MEMTESTPREFIX),$(TESTDATA))
 
 .PHONY: memtest
-memtest: $(RFULLBIN) $(LOCALTESTDATA) | $(MEMTESTDIR)
-	valgrind --tool=massif --massif-out-file=$(MEMTESTDIR)/massif.out \
-		--ignore-fn=mallocate --stacks=yes \
-		$(RFULLBIN) -s -f $(TESTDATADIR)/dblp.xml.00001.1 asdf qwer
+memtest: $(MEMTESTOUT)
 
-#valgrind --tool=massif --stacks=yes --massif-out-file=massif.out ./out/bin/rmatch -m count -f ./testcases/dblp.xml.00001.1.10000 asdf qwer
+$(MEMTESTOUT): $(MEMTESTDIR)/$(MEMTESTPREFIX)%: $(TESTDATADIR)/% | $(MEMTESTDIR)
+	valgrind --tool=massif \
+		--massif-out-file=$@ \
+		--ignore-fn=mallocate --stacks=yes \
+		--ignore-fn='std::basic_filebuf<char, std::char_traits<char> >::open(char const*, std::_Ios_Openmode)' \
+		$(RFULLBIN) -m count -c 1000000 -s -f $< asdf qwer
+
+.PHONY: clean-memtest
+clean-memtest:
+	$(RM) $(MEMTESTDIR)
 
 $(OUT):
 	$(MKDIR) $@
@@ -106,11 +120,6 @@ $(TESTDATADIR):
 	$(MKDIR) $@
 $(MEMTESTDIR):
 	$(MKDIR) $@
-
-
-.PHONY: clean-testdata
-clean-testdata:
-	$(RM) $(TESTDATADIR)
 
 .PHONY: clean
 clean:

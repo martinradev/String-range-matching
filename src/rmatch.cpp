@@ -2,10 +2,12 @@
 #include "range_count.hpp"
 #include "naive_range_match.hpp"
 #include "mallocate.hpp"
+#include "push_back_iterator.hpp"
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <iterator>
+#include <limits>
+#include <chrono>
 #include <cstdlib>
 #include <cstring>
 #include <cstdarg>
@@ -27,17 +29,25 @@ struct input {
     method m;
     size_t k;
     int s;
+    size_t c;
+    bool p;
     int ret;
-    input(): k(3), m(NAIVE), s(false), ret(0) {}
+    input():
+        k(3), m(NAIVE), s(false), ret(0), p(false),
+        c(numeric_limits<size_t>::max()) {}
 };
 
-const char *shopts = "hm:k:sf:t:";
+const char *shopts = "hm:k:sf:t:c:p";
 
 const option opts[] = {
     { "help",   no_argument,       nullptr, 'h' },
     { "method", required_argument, nullptr, 'm' },
     { "k",      required_argument, nullptr, 'k' },
-    { "s",      no_argument,       nullptr, 's' },
+    { "silent", no_argument,       nullptr, 's' },
+    { "file",   required_argument, nullptr, 'f' },
+    { "test",   required_argument, nullptr, 't' },
+    { "cut",    required_argument, nullptr, 'c' },
+    { "time",   no_argument,       nullptr, 'p' },
     { nullptr,  no_argument,       nullptr,  0  }
 };
 
@@ -49,9 +59,13 @@ Mandatory arguments to long options are mandatory for short options too.
   -k, --k=VALUE        run range match count k set to VALUE, only has effect if
                          METHOD is "count"; k must be larger or equal to 3,
                          default is 3
-  -s, --silent         do not produce any output
+  -s, --silent         do not produce any output; if -p is set, timing output
+                       will still be printed
   -f, --file=FILE      load text from file FILE
   -t, --test=TESTFILE  load test file from file TESTFILE
+  -c, --cut=CHARS      use first CHARS characters of the source text and ignore
+                       the rest
+  -p, --time           print timing output in seconds
 )STR";
 
 void usage(FILE *f, const char *app)
@@ -77,12 +91,12 @@ void nag(const char *app, const char *fmt...)
 }
 
 template <typename string_type>
-bool readfile(const char *file, string_type& s)
+bool readfile(const char *file, string_type& s, size_t c)
 {
     ifstream t(file);
     if (!t.good()) return false;
     t.seekg(0, ios::end);
-    size_t size = t.tellg();
+    size_t size = min(static_cast<size_t>(t.tellg()),c);
     s.resize(size);
     t.seekg(0);
     t.read(&s[0], size);
@@ -94,6 +108,7 @@ bool readtestfile(const char *file, input& in)
     ifstream t(file);
     if (!t.good()) return false;
     getline(t,in.t);
+    if (in.c < in.t.size()) in.t.resize(in.c);
     if (!t.good()) return false;
     getline(t,in.b);
     if (!t.good()) return false;
@@ -108,11 +123,12 @@ bool fail(input& in)
     return false;
 }
 
-extern "C" bool init(int argc, char *const argv[], input& in)
+bool init(int argc, char *const argv[], input& in)
 {
     char c;
     const char *app = argv[0];
     int form = 1;
+    mstring src;
     while ((c = getopt_long(argc, argv, shopts, opts, nullptr)) != -1) {
         switch (c) {
             case 'h':
@@ -129,7 +145,7 @@ extern "C" bool init(int argc, char *const argv[], input& in)
                 }
                 break;
             case 'k':
-                in.k = atoi(optarg);
+                in.k = atol(optarg);
                 if (in.k < 3) {
                     nag(app,"k must be an integer larger or equal to 3\n");
                     return fail(in);
@@ -140,17 +156,21 @@ extern "C" bool init(int argc, char *const argv[], input& in)
                 break;
             case 'f':
                 form = 2;
-                if (!readfile(optarg,in.t)) {
-                    nag(app,"can't read file %s\n",optarg);
-                    return fail(in);
-                }
+                src = optarg;
                 break;
             case 't':
                 form = 3;
-                if (!readtestfile(optarg,in)) {
-                    nag(app,"can't read test file %s\n",optarg);
+                src = optarg;
+                break;
+            case 'c':
+                in.c = atol(optarg);
+                if (in.c == 0) {
+                    nag(app,"CHARS must be a positive integer\n");
                     return fail(in);
                 }
+                break;
+            case 'p':
+                in.p = true;
                 break;
             case '?':
             default:
@@ -175,41 +195,50 @@ extern "C" bool init(int argc, char *const argv[], input& in)
                 help(stderr,app);
                 return fail(in);
             }
+            if (!readfile(src.c_str(),in.t,in.c)) {
+                nag(app,"can't read file %s\n",optarg);
+                return fail(in);
+            }
             in.b = argv[optind];
             in.e = argv[optind+1];
             break;
         case 3:
+            if (!readtestfile(src.c_str(),in)) {
+                nag(app,"can't read test file %s\n",optarg);
+                return fail(in);
+            }
         default:
             break;
     }
     return true;
 }
 
-template <typename C>
-struct push_back_iterator: public back_insert_iterator<C> {
-    push_back_iterator(C& c): back_insert_iterator<C>(c) {}
+struct timer {
+    typedef std::chrono::time_point<std::chrono::high_resolution_clock> time;
+    time start;
+    bool print;
+    timer(bool print):
+        start(std::chrono::high_resolution_clock::now()),
+        print(print) {}
+    ~timer()
+    {
+        using namespace std;
+        using namespace std::chrono;
+        auto stop = high_resolution_clock::now();
+        auto span = duration_cast<duration<double>>(stop-start).count();
+        if (!print) return;
+        cout << span << "\n";
+    }
 };
-
-namespace std {
-template <typename C>
-struct iterator_traits<push_back_iterator<C>>:
-public iterator_traits<back_insert_iterator<C>> {
-    typedef typename C::value_type value_type;
-};
-}
-
-template <typename C>
-push_back_iterator<C> push_backer(C& c)
-{
-    return push_back_iterator<C>(c);
-}
 
 int main(int argc, char *const argv[])
 {
+    using namespace chrono;
     input in;
     vector<size_t,mallocator<size_t>> out;
     size_t c;
     if (!init(argc, argv, in)) return in.ret;
+    timer t(in.p);
     switch (in.m) {
         case NAIVE:
             str::naive_range_match(in.t,in.b,in.e,push_backer(out));

@@ -1,54 +1,85 @@
 #ifndef MALLOCATE_HPP
 #define MALLOCATE_HPP
 
-#include <cstdlib>
-#include <limits>
-#include <memory>
+#include <cstddef>
+#include <new>
 
 extern "C" void *mallocate(size_t bytes);
 
-template <typename T>
-struct mallocator {
-    using value_type = T;
+template <class T> class mallocator
+{
+public:
+    typedef T                 value_type;
+    typedef value_type*       pointer;
+    typedef const value_type* const_pointer;
+    typedef value_type&       reference;
+    typedef const value_type& const_reference;
+    typedef std::size_t       size_type;
+    typedef std::ptrdiff_t    difference_type;
 
-    // circumventing gcc basic_string implementation
-    using pointer = value_type*;
-    using ptraits = std::pointer_traits<pointer>;
-    using const_pointer = value_type const*;
-    using difference_type = typename ptraits::difference_type;
-    using size_type = typename std::make_unsigned<difference_type>::type;
-    using reference = value_type&;
-    using const_reference = value_type const&;
+    template <class U>
+    struct rebind { typedef mallocator<U> other; };
 
-    mallocator() = default;
+    mallocator() {}
+    mallocator(const mallocator&) {}
     template <class U>
     mallocator(const mallocator<U>&) {}
+    ~mallocator() {}
 
-    T* allocate(std::size_t n) {
-        if (n <= std::numeric_limits<std::size_t>::max() / sizeof(T)) {
-            if (auto ptr = mallocate(n*sizeof(T))) {
-                return static_cast<T*>(ptr);
-            }
-        }
-        throw std::bad_alloc();
-    }
-    void deallocate(T* ptr, std::size_t n) {
-        std::free(ptr);
+    pointer address(reference x) const { return &x; }
+    const_pointer address(const_reference x) const
+    {
+        return x;
     }
 
-    template<typename U> struct rebind { typedef mallocator<U> other; };
+    pointer allocate(size_type n, const_pointer = 0)
+    {
+        void *p = mallocate(n*sizeof(T));
+        if (!p)
+          throw std::bad_alloc();
+        return static_cast<pointer>(p);
+    }
+
+    void deallocate(pointer p, size_type)
+    {
+        ::operator delete(p);
+    }
+
+    size_type max_size() const
+    {
+        return static_cast<size_type>(-1) / sizeof(T);
+    }
+
+    void construct(pointer p, const value_type& x)
+    {
+        new(p) value_type(x);
+    }
+    void destroy(pointer p) { p->~value_type(); }
+
+private:
+    void operator=(const mallocator&);
 };
 
-/*
-template <typename T, typename U>
-inline bool operator == (const mallocator<T>&, const mallocator<U>&) {
+template<> class mallocator<void>
+{
+    typedef void        value_type;
+    typedef void*       pointer;
+    typedef const void* const_pointer;
+
+    template <class U>
+    struct rebind { typedef mallocator<U> other; };
+};
+
+template <class T>
+inline bool operator==(const mallocator<T>&, const mallocator<T>&)
+{
     return true;
 }
 
-template <typename T, typename U>
-inline bool operator != (const mallocator<T>& a, const mallocator<U>& b) {
-    return !(a == b);
+template <class T>
+inline bool operator!=(const mallocator<T>&, const mallocator<T>&)
+{
+    return false;
 }
-*/
 
 #endif
