@@ -1,7 +1,8 @@
 MKDIR=mkdir -p
 RM=rm -rf
+CP=cp
 CXX=g++
-CPPSTD=-g -std=c++0x -I./include -I./test -I.
+CPPSTD=-g -std=c++0x -I./include
 CPPFLAGS=$(CPPSTD) -O2
 
 RBIN=rmatch
@@ -11,7 +12,7 @@ RSRCS=rmatch.cpp mallocate.cpp timer.cpp
 TBIN=test
 TDIR=test
 TSRCS=TestSuite.cpp main.cpp ChrochemoreTest.cpp SuffixArrayTest.cpp \
-			TestCase.cpp TestGenerator.cpp TestSuite.cpp ZAlgorithmTest.cpp \
+			TestGenerator.cpp TestSuite.cpp ZAlgorithmTest.cpp \
 			range_count_test.cpp
 
 OUT=out
@@ -42,14 +43,15 @@ $(RBIN): $(RFULLBIN)
 $(TBIN): $(TFULLBIN)
 
 SIMPLETEST=simple_test.txt
-SIMPLETESTSRC=$(TDIR)/testcases/$(SIMPLETEST)
+SIMPLETESTSRC=$(TDIR)/$(SIMPLETEST)
+SIMPLETESTDST=$(BINOUT)/$(SIMPLETEST)
 
-$(SIMPLETEST): $(SIMPLETESTSRC) | $(BINOUT)
-	cp $< $@
+$(SIMPLETESTDST): $(SIMPLETESTSRC) | $(BINOUT)
+	$(CP) $< $@
 
 $(BINOUT)/$(RBIN): $(ROBJS) | $(BINOUT)
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-$(BINOUT)/$(TBIN): $(TOBJS) | $(BINOUT) $(SIMPLETESTSRC)
+$(BINOUT)/$(TBIN): $(TOBJS) | $(BINOUT) $(SIMPLETESTDST)
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 # disable optimization for this file

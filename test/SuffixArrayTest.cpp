@@ -7,7 +7,7 @@
 #include "check_macros.h"
 #include "TestCase.hpp"
 #include "TestGenerator.hpp"
-
+#include "main.hpp"
 #include <string>
 #include <algorithm>
 #include <vector>
@@ -72,7 +72,7 @@ TEST(SUFFIX_ARRAY, TEST_GENERATOR_TEST_LONG) {
 */
 TEST(SUFFIX_ARRAY, TEST_GENERATOR_TEST_LOAD_FROM_FILE) {
     TestGenerator generator;
-    TestCase<char> test = TestCase<char>("simple_test.txt");
+    TestCase<char> test = TestCase<char>(app_path + string("simple_test.txt"));
     SuffixArray<string> arr = SuffixArray<string>(test.getData());
     vector<size_t> out = arr.rangeQuery(test.getLowerBound(), test.getUpperBound());
     sort(out.begin(), out.end());

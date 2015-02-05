@@ -6,11 +6,24 @@
 #include "sais.hxx"
 #include "TestGenerator.hpp"
 #include "ProjectInc.hpp"
+#include "main.hpp"
 #include <ctime>
+
 using namespace std;
 
-int main()
+string app_path;
+
+void set_app_path(char *path)
 {
+    app_path = path;
+    size_t i = app_path.rfind('/');
+    if (i == string::npos) return;
+    app_path.resize(i+1);
+}
+
+int main(int argc, char *argv[])
+{
+    set_app_path(argv[0]);
     TestSuite::run_tests();
     //TestGenerator gen;
     //ifstream in("testcases/Escherichia_Coli");
