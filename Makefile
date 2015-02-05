@@ -1,7 +1,7 @@
 MKDIR=mkdir -p
 RM=rm -rf
 CXX=g++
-CPPSTD=-g -std=c++0x -I./include
+CPPSTD=-g -std=c++0x -I./include -I./test -I.
 CPPFLAGS=$(CPPSTD) -O2
 
 RBIN=rmatch
@@ -10,7 +10,9 @@ RSRCS=rmatch.cpp mallocate.cpp timer.cpp
 
 TBIN=test
 TDIR=test
-TSRCS=TestSuite.cpp main.cpp
+TSRCS=TestSuite.cpp main.cpp ChrochemoreTest.cpp SuffixArrayTest.cpp \
+			TestCase.cpp TestGenerator.cpp TestSuite.cpp ZAlgorithmTest.cpp \
+			range_count_test.cpp
 
 OUT=out
 BINOUT=$(OUT)/bin
@@ -39,9 +41,15 @@ $(RBIN): $(RFULLBIN)
 .PHONY: $(TBIN)
 $(TBIN): $(TFULLBIN)
 
+SIMPLETEST=simple_test.txt
+SIMPLETESTSRC=$(TDIR)/testcases/$(SIMPLETEST)
+
+$(SIMPLETEST): $(SIMPLETESTSRC) | $(BINOUT)
+	cp $< $@
+
 $(BINOUT)/$(RBIN): $(ROBJS) | $(BINOUT)
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-$(BINOUT)/$(TBIN): $(TOBJS) | $(BINOUT)
+$(BINOUT)/$(TBIN): $(TOBJS) | $(BINOUT) $(SIMPLETESTSRC)
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 # disable optimization for this file

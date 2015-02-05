@@ -22,7 +22,7 @@ TEST(SUFFIX_ARRAY,SIMPLE_TEST) {
     basic_string<char> to = "z";
     vector<size_t> correct = {0,1,2,3,4,5};
     TestCase<char> test = TestCase<char>(data, from, to, correct);
-    SuffixArray<char> arr = SuffixArray<char>(data);
+    SuffixArray<string> arr = SuffixArray<string>(data);
     vector<size_t> out = arr.rangeQuery(from, to);
     sort(out.begin(), out.end());
     CHECK_EQUAL(true, test.check(out));
@@ -37,7 +37,7 @@ TEST(SUFFIX_ARRAY, SIMPLE_TEST_2) {
     basic_string<char> to = "z";
     vector<size_t> correct = {0,1,2,3,4,5};
     TestCase<char> test = TestCase<char>(data, from, to, correct);
-    SuffixArray<char> arr = SuffixArray<char>(data);
+    SuffixArray<string> arr = SuffixArray<string>(data);
     vector<size_t> out = arr.rangeQuery(from, to);
     sort(out.begin(), out.end());
     CHECK_EQUAL(true, test.naiveCheck(out));
@@ -49,7 +49,7 @@ TEST(SUFFIX_ARRAY, SIMPLE_TEST_2) {
 TEST(SUFFIX_ARRAY, TEST_GENERATOR_TEST) {
     TestGenerator generator;
     TestCase<char> test = generator.generateRandomTestCase(10, 3, 7);
-    SuffixArray<char> arr = SuffixArray<char>(test.getData());
+    SuffixArray<string> arr = SuffixArray<string>(test.getData());
     vector<size_t> out = arr.rangeQuery(test.getLowerBound(), test.getUpperBound());
     sort(out.begin(), out.end());
     CHECK_EQUAL(true, test.naiveCheck(out));
@@ -61,10 +61,10 @@ TEST(SUFFIX_ARRAY, TEST_GENERATOR_TEST) {
 TEST(SUFFIX_ARRAY, TEST_GENERATOR_TEST_LONG) {
     TestGenerator generator;
     TestCase<char> test = generator.generateRandomTestCase(10000, 15, 18);
-    SuffixArray<char> arr = SuffixArray<char>(test.getData());
+    SuffixArray<string> arr = SuffixArray<string>(test.getData());
     vector<size_t> out = arr.rangeQuery(test.getLowerBound(), test.getUpperBound());
     sort(out.begin(), out.end());
-    CHECK_EQUAL(true, test.naiveCheck(out));
+    CHECK_EQUAL(true, test.check(out));
 }
 
 /*!
@@ -72,8 +72,8 @@ TEST(SUFFIX_ARRAY, TEST_GENERATOR_TEST_LONG) {
 */
 TEST(SUFFIX_ARRAY, TEST_GENERATOR_TEST_LOAD_FROM_FILE) {
     TestGenerator generator;
-    TestCase<char> test = TestCase<char>("testcases/simple_test.txt");
-    SuffixArray<char> arr = SuffixArray<char>(test.getData());
+    TestCase<char> test = TestCase<char>("simple_test.txt");
+    SuffixArray<string> arr = SuffixArray<string>(test.getData());
     vector<size_t> out = arr.rangeQuery(test.getLowerBound(), test.getUpperBound());
     sort(out.begin(), out.end());
     CHECK_EQUAL(true, test.check(out));

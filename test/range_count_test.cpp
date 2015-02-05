@@ -1,4 +1,9 @@
-void check_contains(const str::detail::s_p_t<int>& s_p, int x, int i)
+#include "range_count.hpp"
+#include "check_macros.h"
+
+typedef typename str::detail::s_p_t<int>::type s_p_t;
+
+void check_contains(const s_p_t& s_p, int x, int i)
 {
     using namespace str::detail;
     int b, e, c;
@@ -14,8 +19,7 @@ void check_contains(const str::detail::s_p_t<int>& s_p, int x, int i)
 }
 
 TEST(ONE_SIDED_STRING_RANGE_COUNTING_CONTAINS, NORMAL) {
-    using namespace str::detail;
-    s_p_t<int> s{{0,1,0},{3,6,0},{6,7,0},{8,10,1}};
+    s_p_t s{{0,1,0},{3,6,0},{6,7,0},{8,10,1}};
     check_contains(s,10,-1);
     check_contains(s,8,3);
     check_contains(s,6,2);
