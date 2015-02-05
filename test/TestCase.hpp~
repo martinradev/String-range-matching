@@ -124,7 +124,7 @@ class TestCase {
             suffixes.insert(std::make_pair(m_data.substr(i), i));
         }
         typename std::map<storage,size_t>::iterator low, up;
-        low = suffixes.lower_bound(m_lowerBound);
+        low = suffixes.upper_bound(m_lowerBound);
         up = suffixes.lower_bound(m_upperBound);
         std::vector<size_t> tmpOut;
         tmpOut.reserve(m_data.length());

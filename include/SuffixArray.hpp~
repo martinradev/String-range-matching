@@ -112,7 +112,7 @@ class SuffixArray {
         int lstr = 0, rstr = 0, off = 0;
         int l = 0, r = m_array.size()-1;
         int i,j;
-        while (l<=r) {
+        while (l<r) {
             int mid = (l+r)>>1;
             int idx = m_array[mid];
             i = off+idx;
