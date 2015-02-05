@@ -141,7 +141,7 @@ bool init(int argc, char *const argv[], input& in)
                 help(stdout, app);
                 return false;
             case 'm':
-                if (!strcmp(optarg,"naive")) {
+                if (!strcmp(optarg,"n")) {
                     in.m = NAIVE;
                 } else if (!strcmp(optarg,"gs")) {
                     in.m = GS;

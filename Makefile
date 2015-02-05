@@ -50,9 +50,9 @@ $(SIMPLETESTDST): $(SIMPLETESTSRC) | $(BINOUT)
 	$(CP) $< $@
 
 $(BINOUT)/$(RBIN): $(ROBJS) | $(BINOUT)
-	$(CXX) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	$(CXX) -o $@ $^ $(LDLIBS)
 $(BINOUT)/$(TBIN): $(TOBJS) | $(BINOUT) $(SIMPLETESTDST)
-	$(CXX) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	$(CXX) -o $@ $^ $(LDLIBS)
 
 # disable optimization for this file
 $(ROBJDIR)/mallocate.o: $(RDIR)/mallocate.cpp | $(ROBJDIR)
