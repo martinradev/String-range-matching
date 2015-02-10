@@ -121,7 +121,7 @@ class SuffixArray {
             while (i<m_data.length() && j < bottom.length() && m_data[i] == bottom[j]) ++i, ++j;
 
             // go right on pattern smaller or equal
-            if (m_data[i] > bottom[j]) {
+            if (m_data[i] >= bottom[j]) {
                 rstr = j;
                 r = mid-1;
             } else {

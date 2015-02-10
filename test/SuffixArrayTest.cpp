@@ -78,3 +78,15 @@ TEST(SUFFIX_ARRAY, TEST_GENERATOR_TEST_LOAD_FROM_FILE) {
     sort(out.begin(), out.end());
     CHECK_EQUAL(true, test.check(out));
 }
+
+TEST(SUFFIX_ARRAY, TEST_BORDER_CASE) {
+    basic_string<char> data = "asdf";
+    basic_string<char> from = "asdf";
+    basic_string<char> to = "f";
+    vector<size_t> correct = {0,2};
+    TestCase<char> test = TestCase<char>(data, from, to, correct);
+    SuffixArray<string> arr = SuffixArray<string>(data);
+    vector<size_t> out = arr.rangeQuery(from, to);
+    sort(out.begin(), out.end());
+    CHECK_EQUAL(true, test.naiveCheck(out));
+}
