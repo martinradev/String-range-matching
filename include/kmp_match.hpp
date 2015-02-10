@@ -76,20 +76,22 @@ struct kmp_match_iterator {
             const string_type& t, size_type n,
             const string_type& p, size_type m):
         ctx(std::make_shared<context>(t,n,p,m)),
-        i(0), j(-1), k(-1) { operator++(); }
+        i(0), j(-1), k(-1) { next(); }
 
     bool operator!=(const kmp_match_iterator& o) const { return i != o.i; }
     bool operator==(const kmp_match_iterator& o) const { return i == o.i; }
     value_type operator*() const { return v; }
-    void operator++(int) { operator++(); }
+    void operator++(int) { next(); }
+    kmp_match_iterator& operator++() { next(); return *this; }
 
-    kmp_match_iterator& operator++()
+    void next()
     {
         const index_type n = ctx->n;
         const index_type m = ctx->m;
         const string_type& t = ctx->t;
         const string_type& p = ctx->p;
         const std::vector<index_type>& lcp = ctx->lcp;
+
         while (i <= n) {
             // t[i,n) is the suffix being compared to p
             // t[j,k) is a previously found prefix of p with maximal k
@@ -113,11 +115,10 @@ struct kmp_match_iterator {
             // Post-condition: l = lcp(T[i,n),P)
             if (l != m && (i + l == n || t[i+l] < p[l])) {
                 v = i++;
-                return *this;
+                return;
             }
             ++i;
         }
-        return *this;
     }
 
     kmp_match_iterator end() const
@@ -134,11 +135,9 @@ void kmp_match(
         output_iterator out)
 {
     using namespace std;
-    auto i1 = kmp_match_iterator<string_type, size_type>(t,n,b,m1);
-    auto e1 = i1.end();
-    auto i2 = kmp_match_iterator<string_type, size_type>(t,n,e,m2);
-    auto e2 = i2.end();
-    std::set_difference(i2,e2,i1,e1,out);
+    auto bi = kmp_match_iterator<string_type, size_type>(t,n,b,m1);
+    auto ei = kmp_match_iterator<string_type, size_type>(t,n,e,m2);
+    std::set_difference(ei,ei.end(),bi,bi.end(),out);
 }
 
 template <typename string_type, typename output_iterator>
