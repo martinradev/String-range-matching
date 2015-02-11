@@ -3,6 +3,7 @@
 #include "SuffixArray.hpp"
 #include "range_count.hpp"
 #include "naive_range_match.hpp"
+#include "kmp_match.hpp"
 #include "mallocate.hpp"
 #include "timer.hpp"
 #include <string>
@@ -21,7 +22,8 @@ enum method {
     GS,
     C,
     Z,
-    SA
+    SA,
+    KMP
 };
 
 typedef basic_string<char,char_traits<char>,mallocator<char>> mstring;
@@ -60,8 +62,8 @@ Mandatory arguments to long options are mandatory for short options too.
   -h, --help           display this help and exit
   -m, --method=METHOD  set the matching algorithm; possible values are "n"
                          (naive O(nm) search), "gs" (Galil-Seiferas count), "c"
-                         (Crochemore), "z" (Z-algorithm) or "sa" (suffix array
-                         search); default is "n"
+                         (Crochemore), "z" (Z-algorithm), "sa" (suffix array
+                         search) or "kmp" (Knuth-Morris-Pratt); default is "n"
   -k, --k=VALUE        run range match count k set to VALUE, only has effect if
                          METHOD is "gs"; k must be larger or equal to 3,
                          default is 3
@@ -151,6 +153,8 @@ bool init(int argc, char *const argv[], input& in)
                     in.m = Z;
                 } else if (!strcmp(optarg,"sa")) {
                     in.m = SA;
+                } else if (!strcmp(optarg,"kmp")) {
+                    in.m = KMP;
                 } else {
                     nag(app,"unknown method \"%s\"\n",optarg);
                     return fail(in);
@@ -250,6 +254,9 @@ int main(int argc, char *const argv[])
             break;
         case SA:
             rangeQuery(in.t,in.b,in.e,out);
+            break;
+        case KMP:
+            kmp_match(in.t,in.b,in.e,back_inserter(out));
             break;
     }
     t.stop();
