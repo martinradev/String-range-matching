@@ -72,58 +72,6 @@ void updateMS(const string_type & pattern, size_t & l, size_t & s, size_t & p)
 }
 
 /*!
-    searches for \a pattern in \a text
-    returned is a \a std::vector of starting possitions.
-*/
-template<typename T>
-std::vector<size_t> crochemoreSearch(const std::basic_string<T> & text, const std::basic_string<T> & pattern)
-{
-    std::vector<size_t> positions;
-    size_t i=0,l=0, p=0, s= 0;
-    while (i < text.length())
-    {
-        while (i+l < text.length() && l < pattern.length() && text[i+l]==pattern[l])
-        {
-            /*
-                update the maximum suffix and the maximum pariod of it
-            */
-            updateMS(pattern, l, s, p);
-        }
-        if (l == pattern.length())
-        {
-            /*
-                pattern[0..l) == text[i..i+l)
-            */
-            positions.push_back(i);
-        }
-        if (p <= l/3 && p != 0 && equal(pattern.begin(), pattern.begin()+s, pattern.begin()+p))
-        {
-            /*
-                we have that pattern[0..s) == pattern[p..p+s)
-                => per(pattern[0...l)) == per(MS(pattern[0...l))
-                if p <= l/3 then we have that pattern[0...l) is 3 periodic
-                essentially we skip l/3 characters since we have
-                i+=p and l-=p
-            */
-            i += p;
-            l -= p;
-        }
-        else
-        {
-            /*
-                otherwise safely just skip l/3 characters and restart matching
-            */
-            i = i + l/3 + 1;
-            l=0,s=0,p=0;
-        }
-    }
-    /*
-        use strict move semantics to prevent copying of data no matter the compiler
-    */
-    return std::move(positions);
-}
-
-/*!
     returns a \a boost::dynamic_bitset of size \a text.length() where
     bit[i] = 1 then text[i...) < pattern
     bit[i] = 0 else
@@ -186,6 +134,10 @@ boost::dynamic_bitset<> lowerBound(const string_type & text, const string_type &
     return std::move(bits);
 }
 
+/*!
+    puts the starting positions of all suffixes in \a text which are lexicographically
+    in the range [low,top) in \a positions
+*/
 template<typename string_type, typename output_container>
 void stringRangeMatch(const string_type & text, const string_type & low, const string_type & top, output_container& positions)
 {
@@ -197,7 +149,7 @@ void stringRangeMatch(const string_type & text, const string_type & low, const s
 
 /*!
     returns the starting positions of all suffixes in \a text which are lexicographically
-    in the range (low,top).
+    in the range [low,top).
 */
 template<typename string_type>
 std::vector<size_t> stringRangeMatch(const string_type & text, const string_type & low, const string_type & top)

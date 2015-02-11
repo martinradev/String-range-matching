@@ -20,6 +20,9 @@ template<typename string_type>
 boost::dynamic_bitset<> lowerBoundZ(const string_type & text, const string_type & pattern)
 {
     boost::dynamic_bitset<> bits = boost::dynamic_bitset<>(text.length());
+    /*
+        combine the text and the pattern like PATTERN$TEXT. We can ommit the $.
+    */
     string_type total = pattern + text;
     std::vector<size_t> prefixes(pattern.length() + text.length());
     size_t l = 0, r = 0;
@@ -86,6 +89,10 @@ boost::dynamic_bitset<> lowerBoundZ(const string_type & text, const string_type 
     return std::move(bits);
 }
 
+/*!
+    Finds all of the suffixes of \a text which are bigger than \a low and smaller than \a top.
+    The positions are stored in \a positions.
+*/
 template <typename string_type, typename output_container>
 void stringRangeMatchZ(const string_type & text, const string_type & low, const string_type & top, output_container& positions)
 {

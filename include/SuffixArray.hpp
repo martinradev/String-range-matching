@@ -106,7 +106,7 @@ class SuffixArray {
     /*!
         returns the index in the suffix array for which
         array[t...) is a subarray for which
-        p = array[i], then data[p] > bottom
+        p = array[i], then data[p] >= bottom
     */
     int upperBound(const string_type & bottom) {
         int lstr = 0, rstr = 0, off = 0;
@@ -134,8 +134,8 @@ class SuffixArray {
     }
 
     /*!
-        returns the starting positions of the suffixes which are
-        bigger than \a bottom and smaller than \a top.
+        stores the starting positions of the suffixes which are
+        bigger or equal than \a bottom and smaller than \a top.
     */
     template <typename output_container>
     void rangeQuery(const string_type & bottom, const string_type & top, output_container& positions) {
@@ -154,7 +154,11 @@ class SuffixArray {
             ++i;
         }
     }
-
+    
+    /*!
+        returns the starting positions of the suffixes which are
+        bigger or equal than \a bottom and smaller than \a top.
+    */
     std::vector<size_t> rangeQuery(const string_type & bottom, const string_type & top) {
         std::vector<size_t> positions;
         rangeQuery(bottom,top,positions);
