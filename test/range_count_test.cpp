@@ -1,13 +1,13 @@
-#include "range_count.hpp"
+#include "gs_count.hpp"
 #include "check_macros.h"
 
-typedef typename str::detail::s_p_t<int>::type s_p_t;
+typedef typename rmatch::detail::s_p_t<int>::type s_p_t;
 
 void check_contains(const s_p_t& s_p, int x, int i)
 {
-    using namespace str::detail;
+    using namespace rmatch::detail;
     int b, e, c;
-    contains(s_p,x,&b,&e,&c);
+    contains(s_p,x,b,e,c);
     if (i < 0) {
         CHECK_EQUAL(b,0);
     } else {

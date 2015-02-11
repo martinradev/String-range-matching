@@ -3,7 +3,7 @@
 
 #include "Crochemore.hpp"
 #include "ZAlgorithm.hpp"
-#include "range_count.hpp"
+#include "gs_count.hpp"
 #include "naive_range_match.hpp"
 #include "Util.hpp"
 

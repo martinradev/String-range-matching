@@ -1,7 +1,7 @@
 #include "Crochemore.hpp"
 #include "ZAlgorithm.hpp"
 #include "SuffixArray.hpp"
-#include "range_count.hpp"
+#include "gs_count.hpp"
 #include "naive_range_match.hpp"
 #include "kmp_match.hpp"
 #include "mallocate.hpp"
@@ -244,7 +244,7 @@ int main(int argc, char *const argv[])
             naive_range_match(in.t,in.b,in.e,back_inserter(out));
             break;
         case GS:
-            c = range_count(in.t,in.b,in.e,in.k);
+            c = rmatch::gs_count_range(in.t,in.b,in.e,in.k);
             break;
         case C:
             stringRangeMatch(in.t,in.b,in.e,out);
@@ -256,7 +256,7 @@ int main(int argc, char *const argv[])
             rangeQuery(in.t,in.b,in.e,out);
             break;
         case KMP:
-            kmp_match(in.t,in.b,in.e,back_inserter(out));
+            rmatch::kmp_match_range(in.t,in.b,in.e,back_inserter(out));
             break;
     }
     t.stop();

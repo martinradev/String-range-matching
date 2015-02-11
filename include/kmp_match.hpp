@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <iterator>
 
-namespace str {
+namespace rmatch {
 namespace detail {
 
 template <typename string_type, typename size_type, typename lcp_type>
@@ -38,15 +38,15 @@ void kmp_precompute(const string_type& p, size_type pm, lcp_type& lcp)
 }
 
 template <typename string_type, typename size_type>
-struct kmp_match_iterator_context {
+struct kmp_match_less_iterator_context {
     typedef typename std::make_signed<size_type>::type index_type;
-    const string_type& t;
-    const string_type& p;
+    const string_type t;
+    const string_type p;
     const index_type n, m;
     std::vector<index_type> lcp;
-    kmp_match_iterator_context(
-            const string_type& t, size_type n,
-            const string_type& p, size_type m):
+    kmp_match_less_iterator_context(
+            string_type t, size_type n,
+            string_type p, size_type m):
         t(t), p(p), n(n), m(m), lcp(m)
     {
         kmp_precompute(p,m,lcp);
@@ -56,9 +56,10 @@ struct kmp_match_iterator_context {
 } // detail
 
 template <typename string_type, typename size_type>
-struct kmp_match_iterator {
+struct kmp_match_less_iterator {
 
-    typedef detail::kmp_match_iterator_context<string_type,size_type> context;
+    typedef detail::kmp_match_less_iterator_context<string_type,size_type>
+        context;
     typedef typename std::make_signed<size_type>::type index_type;
 
     typedef index_type difference_type;
@@ -67,29 +68,29 @@ struct kmp_match_iterator {
     typedef value_type& reference;
     typedef std::input_iterator_tag iterator_category;
 
-    std::shared_ptr<context> ctx;
+    const std::shared_ptr<const context> ctx;
     index_type i, j, k, l;
     size_type v;
 
-    kmp_match_iterator(size_type i): i(i) {}
-    kmp_match_iterator(
-            const string_type& t, size_type n,
-            const string_type& p, size_type m):
+    kmp_match_less_iterator(size_type i): i(i) {}
+    kmp_match_less_iterator(
+            string_type t, size_type n,
+            string_type p, size_type m):
         ctx(std::make_shared<context>(t,n,p,m)),
         i(0), j(-1), k(-1) { next(); }
 
-    bool operator!=(const kmp_match_iterator& o) const { return i != o.i; }
-    bool operator==(const kmp_match_iterator& o) const { return i == o.i; }
+    bool operator!=(const kmp_match_less_iterator& o) const { return i != o.i; }
+    bool operator==(const kmp_match_less_iterator& o) const { return i == o.i; }
     value_type operator*() const { return v; }
     void operator++(int) { next(); }
-    kmp_match_iterator& operator++() { next(); return *this; }
+    kmp_match_less_iterator& operator++() { next(); return *this; }
 
     void next()
     {
         const index_type n = ctx->n;
         const index_type m = ctx->m;
-        const string_type& t = ctx->t;
-        const string_type& p = ctx->p;
+        const string_type t = ctx->t;
+        const string_type p = ctx->p;
         const std::vector<index_type>& lcp = ctx->lcp;
 
         while (i <= n) {
@@ -121,35 +122,39 @@ struct kmp_match_iterator {
         }
     }
 
-    kmp_match_iterator end() const
+    kmp_match_less_iterator end() const
     {
-        return kmp_match_iterator(ctx->n+1);
+        return kmp_match_less_iterator(ctx->n+1);
     }
 };
 
 template <typename string_type, typename size_type, typename output_iterator>
-void kmp_match(
-        const string_type& t, size_type n,
-        const string_type& b, size_type m1,
-        const string_type& e, size_type m2,
+void kmp_match_range(
+        string_type t, size_type n,
+        string_type b, size_type m1,
+        string_type e, size_type m2,
         output_iterator out)
 {
     using namespace std;
-    auto bi = kmp_match_iterator<string_type, size_type>(t,n,b,m1);
-    auto ei = kmp_match_iterator<string_type, size_type>(t,n,e,m2);
+    auto bi = kmp_match_less_iterator<string_type, size_type>(t,n,b,m1);
+    auto ei = kmp_match_less_iterator<string_type, size_type>(t,n,e,m2);
     std::set_difference(ei,ei.end(),bi,bi.end(),out);
 }
 
 template <typename string_type, typename output_iterator>
-void kmp_match(
+void kmp_match_range(
         const string_type& t,
         const string_type& b,
         const string_type& e,
         output_iterator out)
 {
-    kmp_match(t,t.size(),b,b.size(),e,e.size(),out);
+    kmp_match_range(
+            t.begin(),t.size(),
+            b.begin(),b.size(),
+            e.begin(),e.size(),
+            out);
 }
 
-} // str
+} // rmatch
 
 #endif // KMP_MATCH_HPP
