@@ -109,6 +109,13 @@ class TestCase {
         return true;
     }
     /*!
+        checks \a toBeChecked is the correct suffix match count.
+    */
+    bool checkCount(index_type n)
+    {
+        return m_output.size() == n;
+    }
+    /*!
         Does a naive check whether the output \a toBeChecked is correct.
         MUST BE USED FOR VERY SMALL TEST CASES
         IF USED FOR TEXTS OF LENGTH BIGGER THAN 100, THE PROGRAM WILL EXIT OTHERWISE.
@@ -161,7 +168,8 @@ class TestCase {
         it uses the \a SuffixArray wrapper to do so. Output is sorted.
     */
     void generateOutput() {
-        SuffixArray<storage> arr = SuffixArray<storage>(m_data);
+	using namespace rmatch;        
+	SuffixArray<storage> arr = SuffixArray<storage>(m_data);
         m_output = arr.rangeQuery(m_lowerBound, m_upperBound);
         // sort to guarantee that order is preserved
         std::sort(m_output.begin(), m_output.end());

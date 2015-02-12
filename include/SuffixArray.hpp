@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <iostream>
 
-
+namespace rmatch {
 /*!
     Suffix array wrapper. It uses the SAIS algorithm, implementation of Yuta Mori in the file sais.hxx
     It generates an lcp array and the inverse suffix array. It also supports range search over the suffixes.
@@ -165,8 +165,7 @@ class SuffixArray {
         return positions;
     }
 };
-
-namespace str {
+    
     template <typename string_type, typename output_container>
     void rangeQuery(const string_type& t, const string_type& b, const string_type& e, output_container& o)
     {

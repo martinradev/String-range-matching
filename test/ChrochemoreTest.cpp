@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-using namespace str;
+using namespace rmatch;
 using namespace std;
 using namespace boost;
 

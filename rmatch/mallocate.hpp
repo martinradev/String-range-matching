@@ -1,3 +1,12 @@
+/*
+ * Custom memory allocator that delegates allocations to function mallocate()
+ * with simple c-linkage. Using this allocator with STL containers enables
+ * monitoring memory consumption of these containers by watching the
+ * mallocate() function with external tools (like valgrind).
+ *
+ * Copyright (c) 2015 Jarno Leppänen
+ */
+
 #ifndef MALLOCATE_HPP
 #define MALLOCATE_HPP
 
@@ -5,9 +14,16 @@
 #include <type_traits>
 #include <new>
 
+/* The function doing all memory allocations. */
 extern "C" void *mallocate(size_t bytes);
+
+/* The function doing all deallocations. */
 extern "C" void mdeallocate(void *p);
 
+/**
+ * An allocator class delegating allocations and deallocations to mallocate()
+ * and mdeallocate(). Adheres to c++ allocator requirements.
+ */
 template <class T> class mallocator
 {
 public:
@@ -59,6 +75,7 @@ public:
     void destroy(pointer p) { p->~value_type(); }
 };
 
+/* Specialization for void* types. */
 template<> class mallocator<void>
 {
     typedef void        value_type;
