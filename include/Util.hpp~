@@ -7,7 +7,7 @@
 #include <boost/dynamic_bitset.hpp>
 #include <iostream>
 
-namespace rmatch {
+namespace str {
     /*!
         given two bit vectors \a lowBits and \a topBits it finds the
         bits for which we have ones only in either one of them

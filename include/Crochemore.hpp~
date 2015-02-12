@@ -154,7 +154,7 @@ void stringRangeMatch(const string_type & text, const string_type & low, const s
 template<typename string_type>
 std::vector<size_t> stringRangeMatch(const string_type & text, const string_type & low, const string_type & top)
 {
-    std::vector<size_t> positions;
+    rmatch::vector<size_t> positions;
     stringRangeMatch(text,low,top,positions);
     return std::move(positions);
 }

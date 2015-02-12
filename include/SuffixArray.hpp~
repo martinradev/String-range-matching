@@ -165,7 +165,9 @@ class SuffixArray {
         return positions;
     }
 };
-    
+}
+
+namespace rmatch {
     template <typename string_type, typename output_container>
     void rangeQuery(const string_type& t, const string_type& b, const string_type& e, output_container& o)
     {
