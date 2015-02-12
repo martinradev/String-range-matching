@@ -32,10 +32,20 @@ TFULLBIN=$(BINOUT)/$(TBIN)
 ETOBJDIR=$(subst /,\/,$(TOBJDIR))
 
 FULLSRCS=$(RFULLSRCS) $(TFULLSRCS)
-DEPENDDIR=$(dir $(DEPEND))
 
 .PHONY: all
 all: $(RFULLBIN) $(TFULLBIN)
+
+.PHONY: help
+help:
+	@echo 'usage: $(MAKE) target'
+	@echo 'All intermediate and produced files are placed in directory ./out/'
+	@echo ''
+	@echo 'Targets:'
+	@echo '  all        build rmatch and compile and run tests'
+	@echo '  rmatch     build command line utility'
+	@echo '  test       compile and run tests'
+	@echo '  clean      delete all produced files'
 
 .PHONY: $(RBIN)
 $(RBIN): $(RFULLBIN)
@@ -64,7 +74,7 @@ $(OUT)/%.o: %.cpp
 
 FIXDEP=bash ./scripts/fix_depend.sh
 
-$(DEPEND): $(FULLSRCS) | $(DEPENDDIR)
+$(DEPEND): $(FULLSRCS) | $(OUT)
 	$(CXX) $(CPPFLAGS) $(CFLAGS) -MM $(RFULLSRCS) | $(FIXDEP) "$(EROBJDIR)" > $@
 	$(CXX) $(CPPFLAGS) $(CFLAGS) -MM $(TFULLSRCS) | $(FIXDEP) "$(ETOBJDIR)" >> $@
 
@@ -118,8 +128,6 @@ $(OUT):
 	$(MKDIR) $@
 $(BINOUT):
 	$(MKDIR) $@
-$(DEPENDDIR):
-	$(MKDIR) $@
 $(ROBJDIR):
 	$(MKDIR) $@
 $(TOBJDIR):
@@ -133,4 +141,6 @@ $(MEMTESTDIR):
 clean:
 	$(RM) $(OUT)
 
+ifeq ($(findstring help,$(MAKECMDGOALS)),)
 include $(DEPEND)
+endif
