@@ -109,6 +109,13 @@ class TestCase {
         return true;
     }
     /*!
+        checks \a toBeChecked is the correct suffix match count.
+    */
+    bool checkCount(index_type n)
+    {
+        return m_output.size() == n;
+    }
+    /*!
         Does a naive check whether the output \a toBeChecked is correct.
         MUST BE USED FOR VERY SMALL TEST CASES
         IF USED FOR TEXTS OF LENGTH BIGGER THAN 100, THE PROGRAM WILL EXIT OTHERWISE.
