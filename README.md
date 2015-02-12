@@ -53,7 +53,7 @@ See [REPORT.md](REPORT.md).
 
 ## Authors
 
-[Jarno Leppänen](@jlep) & [Martin Radev](@martinradev)
+[Jarno Leppänen](https://github.com/jlep) & [Martin Radev](https://github.com/martinradev)
 
 ## License
 
