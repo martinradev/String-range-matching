@@ -1,8 +1,15 @@
+/*
+ * A command line program for string range matching using different algorithms.
+ * Features memory consumption and running time evalutions.
+ *
+ * Copyright (c) 2015 Jarno Leppänen
+ */
+
 #include "Crochemore.hpp"
 #include "ZAlgorithm.hpp"
 #include "SuffixArray.hpp"
-#include "range_count.hpp"
-#include "naive_range_match.hpp"
+#include "gs_count.hpp"
+#include "naive_match.hpp"
 #include "kmp_match.hpp"
 #include "mallocate.hpp"
 #include "timer.hpp"
@@ -16,32 +23,6 @@
 #include <getopt.h>
 
 using namespace std;
-
-enum method {
-    NAIVE,
-    GS,
-    C,
-    Z,
-    SA,
-    KMP
-};
-
-typedef basic_string<char,char_traits<char>,mallocator<char>> mstring;
-
-struct input {
-    mstring t;
-    mstring b;
-    mstring e;
-    method m;
-    size_t k;
-    int s;
-    size_t c;
-    bool p;
-    int ret;
-    input():
-        k(3), m(NAIVE), s(false), ret(0), p(false),
-        c(numeric_limits<size_t>::max()) {}
-};
 
 const char *shopts = "hm:k:sf:t:c:p";
 
@@ -111,6 +92,37 @@ bool readfile(const char *file, string_type& s, size_t c)
     return true;
 }
 
+
+/* Different algorithm types. */
+enum method {
+    NAIVE,
+    GS,
+    C,
+    Z,
+    SA,
+    KMP
+};
+
+/* The default string type for input using a custom allocator that allows
+   ignoring input text allocations. */
+typedef basic_string<char,char_traits<char>,mallocator<char>> mstring;
+
+/* Input data for algorithms. */
+struct input {
+    mstring t;
+    mstring b;
+    mstring e;
+    method m;
+    size_t k;
+    int s;
+    size_t c;
+    bool p;
+    int ret;
+    input():
+        k(3), m(NAIVE), s(false), ret(0), p(false),
+        c(numeric_limits<size_t>::max()) {}
+};
+
 bool readtestfile(const char *file, input& in)
 {
     ifstream t(file);
@@ -131,6 +143,7 @@ bool fail(input& in)
     return false;
 }
 
+/* Read input data from command line arguments and input files. */
 bool init(int argc, char *const argv[], input& in)
 {
     char c;
@@ -212,7 +225,7 @@ bool init(int argc, char *const argv[], input& in)
                 return fail(in);
             }
             if (!readfile(src.c_str(),in.t,in.c)) {
-                nag(app,"can't read file %s\n",optarg);
+                nag(app,"can't read file %s\n",src.c_str());
                 return fail(in);
             }
             in.b = argv[optind];
@@ -220,7 +233,7 @@ bool init(int argc, char *const argv[], input& in)
             break;
         case 3:
             if (!readtestfile(src.c_str(),in)) {
-                nag(app,"can't read test file %s\n",optarg);
+                nag(app,"can't read test file %s\n",src.c_str());
                 return fail(in);
             }
         default:
@@ -231,7 +244,6 @@ bool init(int argc, char *const argv[], input& in)
 
 int main(int argc, char *const argv[])
 {
-    using namespace str;
 
     input in;
     if (!init(argc, argv, in)) return in.ret;
@@ -241,22 +253,22 @@ int main(int argc, char *const argv[])
     timer t(in.p);
     switch (in.m) {
         case NAIVE:
-            naive_range_match(in.t,in.b,in.e,back_inserter(out));
+            rmatch::naive_match_range(in.t,in.b,in.e,back_inserter(out));
             break;
         case GS:
-            c = range_count(in.t,in.b,in.e,in.k);
+            c = rmatch::gs_count_range(in.t,in.b,in.e,in.k);
             break;
         case C:
-            stringRangeMatch(in.t,in.b,in.e,out);
+            rmatch::stringRangeMatch(in.t,in.b,in.e,out);
             break;
         case Z:
-            stringRangeMatchZ(in.t,in.b,in.e,out);
+            rmatch::stringRangeMatchZ(in.t,in.b,in.e,out);
             break;
         case SA:
-            rangeQuery(in.t,in.b,in.e,out);
+            rmatch::rangeQuery(in.t,in.b,in.e,out);
             break;
         case KMP:
-            kmp_match(in.t,in.b,in.e,back_inserter(out));
+            rmatch::kmp_match_range(in.t,in.b,in.e,back_inserter(out));
             break;
     }
     t.stop();

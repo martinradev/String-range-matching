@@ -13,7 +13,7 @@ TBIN=test
 TDIR=test
 TSRCS=TestSuite.cpp main.cpp ChrochemoreTest.cpp SuffixArrayTest.cpp \
 			TestGenerator.cpp TestSuite.cpp ZAlgorithmTest.cpp \
-			range_count_test.cpp
+			gs_count_test.cpp kmp_match_test.cpp naive_match_test.cpp
 
 OUT=out
 BINOUT=$(OUT)/bin
@@ -41,6 +41,7 @@ all: $(RFULLBIN) $(TFULLBIN)
 $(RBIN): $(RFULLBIN)
 .PHONY: $(TBIN)
 $(TBIN): $(TFULLBIN)
+	$(TFULLBIN)
 
 SIMPLETEST=simple_test.txt
 SIMPLETESTSRC=$(TDIR)/$(SIMPLETEST)

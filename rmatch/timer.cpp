@@ -1,3 +1,9 @@
+/*
+ * Timer class implementation
+ *
+ * Copyright (c) 2015 Jarno Leppänen
+ */
+
 #include "timer.hpp"
 #include <cstdio>
 

@@ -7,7 +7,7 @@
 #include <string>
 #include <boost/dynamic_bitset.hpp>
 
-namespace str
+namespace rmatch
 {
 
 /*!
