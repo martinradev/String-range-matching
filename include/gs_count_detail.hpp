@@ -57,27 +57,15 @@ void add(typename s_n_t<index_type>::type& s_n, index_type b, index_type c)
     s_n.emplace_back(b,c);
 }
 
-/* Binary search for finding a tuple (b,..) in the list l with the maximum b so
-   that b <= x. */
-template <typename list_type, typename index_type>
-typename list_type::size_type bin_search_b(const list_type& l, index_type x)
-{
-    typedef typename list_type::size_type size_type;
-    size_type i = 0, n = l.size();
-    for (size_type b = n/2; b >= 1; b /= 2) {
-        while (i+b < n && l[i+b].b <= x) i += b;
-    }
-    return i;
-}
-
 /* Auxiliary 'pred'-function in the original paper. Outputs tuple (b,c) in the
-   list Sn with the maximum b so that b <= x. The tuple is always assumed
-   to be found. */
+   list Sn with the maximum b for which b <= x. The list is assumed to be
+   non-empty. */
 template <typename index_type>
 void pred(const typename s_n_t<index_type>::type& s_n, index_type x,
         index_type& b, index_type& c)
 {
-    auto i = bin_search_b(s_n,x);
+    typename s_n_t<index_type>::type::size_type i = 0;
+    while (i+1 < s_n.size() && s_n[i+1].b <= x) ++i;
     b = s_n[i].b;
     c = s_n[i].c;
 }
@@ -89,15 +77,12 @@ template <typename index_type>
 void contains(const typename s_p_t<index_type>::type& s_p, index_type x,
         index_type& b, index_type& e, index_type& c)
 {
-    if (s_p.empty()) {
-        b = 0;
-        return;
-    }
-    auto i = bin_search_b(s_p,x);
-    if (x >= s_p[i].b && x < s_p[i].e) {
-        b = s_p[i].b;
-        e = s_p[i].e;
-        c = s_p[i].c;
+    for (const bec_t<index_type>& bec: s_p) {
+        if (bec.e <= x) continue;
+        if (bec.b > x) break;
+        b = bec.b;
+        e = bec.e;
+        c = bec.c;
         return;
     }
     b = 0;

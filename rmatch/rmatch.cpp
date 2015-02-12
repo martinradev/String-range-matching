@@ -2,7 +2,7 @@
 #include "ZAlgorithm.hpp"
 #include "SuffixArray.hpp"
 #include "gs_count.hpp"
-#include "naive_range_match.hpp"
+#include "naive_match.hpp"
 #include "kmp_match.hpp"
 #include "mallocate.hpp"
 #include "timer.hpp"
@@ -212,7 +212,7 @@ bool init(int argc, char *const argv[], input& in)
                 return fail(in);
             }
             if (!readfile(src.c_str(),in.t,in.c)) {
-                nag(app,"can't read file %s\n",optarg);
+                nag(app,"can't read file %s\n",src.c_str());
                 return fail(in);
             }
             in.b = argv[optind];
@@ -220,7 +220,7 @@ bool init(int argc, char *const argv[], input& in)
             break;
         case 3:
             if (!readtestfile(src.c_str(),in)) {
-                nag(app,"can't read test file %s\n",optarg);
+                nag(app,"can't read test file %s\n",src.c_str());
                 return fail(in);
             }
         default:
@@ -241,7 +241,7 @@ int main(int argc, char *const argv[])
     timer t(in.p);
     switch (in.m) {
         case NAIVE:
-            naive_range_match(in.t,in.b,in.e,back_inserter(out));
+            rmatch::naive_match_range(in.t,in.b,in.e,back_inserter(out));
             break;
         case GS:
             c = rmatch::gs_count_range(in.t,in.b,in.e,in.k);

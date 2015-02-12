@@ -1,7 +1,7 @@
 /*
- * An implementation of a string range match counting algorithm based on an
- * exact string matching algorithm by Galil and Seiferas. Originally published
- * in:
+ * An implementation of a string range match counting algorithm in O(n+m) time
+ * and O(log(m)) extra space based on an exact string matching algorithm by
+ * Galil and Seiferas. Originally published in:
  *
  * J. Kärkkäinen, D. Kempa, S. Puglisi: String Range Matching.
  * Proceedings of the 25th Symposium on Combinatorial Pattern
@@ -106,9 +106,9 @@ index_type gs_count_less(
  *
  * @param x Input text. (random access iterator)
  * @param n Size of the input text.
- * @param b The lower bound pattern. (random access iterator)
+ * @param b Lower bound pattern. (random access iterator)
  * @param m1 Size of the lower bound pattern.
- * @param e The upper bound pattern. (random access iterator)
+ * @param e Upper bound pattern. (random access iterator)
  * @param m2 Size of the upper bound pattern.
  * @param k Constant k used in calculating the k-hrps of the patterns. This
  * should be larger or equal to 3.

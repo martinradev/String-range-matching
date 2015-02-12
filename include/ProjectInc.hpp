@@ -4,7 +4,7 @@
 #include "Crochemore.hpp"
 #include "ZAlgorithm.hpp"
 #include "gs_count.hpp"
-#include "naive_range_match.hpp"
+#include "naive_match.hpp"
 #include "Util.hpp"
 
 #endif // PROJECT_INC_HPP
