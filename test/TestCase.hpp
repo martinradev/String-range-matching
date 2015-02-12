@@ -168,7 +168,8 @@ class TestCase {
         it uses the \a SuffixArray wrapper to do so. Output is sorted.
     */
     void generateOutput() {
-        SuffixArray<storage> arr = SuffixArray<storage>(m_data);
+	using namespace rmatch;        
+	SuffixArray<storage> arr = SuffixArray<storage>(m_data);
         m_output = arr.rangeQuery(m_lowerBound, m_upperBound);
         // sort to guarantee that order is preserved
         std::sort(m_output.begin(), m_output.end());

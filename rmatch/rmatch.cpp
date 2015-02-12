@@ -244,7 +244,6 @@ bool init(int argc, char *const argv[], input& in)
 
 int main(int argc, char *const argv[])
 {
-    using namespace str;
 
     input in;
     if (!init(argc, argv, in)) return in.ret;
@@ -260,13 +259,13 @@ int main(int argc, char *const argv[])
             c = rmatch::gs_count_range(in.t,in.b,in.e,in.k);
             break;
         case C:
-            stringRangeMatch(in.t,in.b,in.e,out);
+            rmatch::stringRangeMatch(in.t,in.b,in.e,out);
             break;
         case Z:
-            stringRangeMatchZ(in.t,in.b,in.e,out);
+            rmatch::stringRangeMatchZ(in.t,in.b,in.e,out);
             break;
         case SA:
-            rangeQuery(in.t,in.b,in.e,out);
+            rmatch::rangeQuery(in.t,in.b,in.e,out);
             break;
         case KMP:
             rmatch::kmp_match_range(in.t,in.b,in.e,back_inserter(out));

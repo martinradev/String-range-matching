@@ -10,7 +10,7 @@
 #include <iterator>
 #include <boost/dynamic_bitset.hpp>
 
-namespace str
+namespace rmatch
 {
 
 /*!
@@ -144,7 +144,7 @@ void stringRangeMatch(const string_type & text, const string_type & low, const s
     using namespace std;
     boost::dynamic_bitset<> lowbits = lowerBound(text,low);
     boost::dynamic_bitset<> topbits = lowerBound(text,top);
-    str::retrieveRangeIndices(lowbits,topbits,positions);
+    rmatch::retrieveRangeIndices(lowbits,topbits,positions);
 }
 
 /*!
