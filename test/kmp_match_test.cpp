@@ -12,7 +12,7 @@ using namespace rmatch;
 using namespace std;
 
 /*!
-    simple test for chrochemore range match
+    simple test for kmp range match
     all suffixes
 */
 TEST(KMP, NORMAL) {
@@ -26,7 +26,7 @@ TEST(KMP, NORMAL) {
 }
 
 /*!
-    Generate tests for gs algorithm with different values for k.
+    Generate tests for kmp algorithm.
 */
 void kmp_test(size_t tn, size_t ln, size_t un)
 {

@@ -12,7 +12,7 @@ using namespace rmatch;
 using namespace std;
 
 /*!
-    simple test for chrochemore range match
+    simple test for naive range match
     all suffixes
 */
 TEST(NAIVE, NORMAL) {
@@ -26,7 +26,7 @@ TEST(NAIVE, NORMAL) {
 }
 
 /*!
-    Generate tests for gs algorithm with different values for k.
+    Generate tests for naive algorithm with.
 */
 void naive_test(size_t tn, size_t ln, size_t un)
 {
