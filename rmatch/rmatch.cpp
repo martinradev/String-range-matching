@@ -1,3 +1,10 @@
+/*
+ * A command line program for string range matching using different algorithms.
+ * Features memory consumption and running time evalutions.
+ *
+ * Copyright (c) 2015 Jarno Leppänen
+ */
+
 #include "Crochemore.hpp"
 #include "ZAlgorithm.hpp"
 #include "SuffixArray.hpp"
@@ -16,32 +23,6 @@
 #include <getopt.h>
 
 using namespace std;
-
-enum method {
-    NAIVE,
-    GS,
-    C,
-    Z,
-    SA,
-    KMP
-};
-
-typedef basic_string<char,char_traits<char>,mallocator<char>> mstring;
-
-struct input {
-    mstring t;
-    mstring b;
-    mstring e;
-    method m;
-    size_t k;
-    int s;
-    size_t c;
-    bool p;
-    int ret;
-    input():
-        k(3), m(NAIVE), s(false), ret(0), p(false),
-        c(numeric_limits<size_t>::max()) {}
-};
 
 const char *shopts = "hm:k:sf:t:c:p";
 
@@ -111,6 +92,37 @@ bool readfile(const char *file, string_type& s, size_t c)
     return true;
 }
 
+
+/* Different algorithm types. */
+enum method {
+    NAIVE,
+    GS,
+    C,
+    Z,
+    SA,
+    KMP
+};
+
+/* The default string type for input using a custom allocator that allows
+   ignoring input text allocations. */
+typedef basic_string<char,char_traits<char>,mallocator<char>> mstring;
+
+/* Input data for algorithms. */
+struct input {
+    mstring t;
+    mstring b;
+    mstring e;
+    method m;
+    size_t k;
+    int s;
+    size_t c;
+    bool p;
+    int ret;
+    input():
+        k(3), m(NAIVE), s(false), ret(0), p(false),
+        c(numeric_limits<size_t>::max()) {}
+};
+
 bool readtestfile(const char *file, input& in)
 {
     ifstream t(file);
@@ -131,6 +143,7 @@ bool fail(input& in)
     return false;
 }
 
+/* Read input data from command line arguments and input files. */
 bool init(int argc, char *const argv[], input& in)
 {
     char c;

@@ -1,3 +1,9 @@
+/*
+ * Custom memory allocation and deallocation function implementations.
+ *
+ * Copyright (c) 2015 Jarno Leppänen
+ */
+
 #include "mallocate.hpp"
 
 using namespace std;
