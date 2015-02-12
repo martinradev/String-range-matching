@@ -10,7 +10,7 @@
 #include <iterator>
 #include <boost/dynamic_bitset.hpp>
 
-namespace str
+namespace rmatch
 {
 
 /*!

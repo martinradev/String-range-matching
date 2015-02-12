@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <iterator>
 
-namespace str {
+namespace rmatch {
 namespace detail {
 
 template <typename string_type, typename size_type, typename lcp_type>
