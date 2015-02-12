@@ -62,13 +62,13 @@ See [REPORT.md](REPORT.md).
 ## References
 
 <a name="1"></a>[[1] J. Kärkkäinen, D. Kempa, S. Puglisi: String Range Matching.
-Proceedings of the 25th Symposium on Combinatorial Pattern Matching (CPM), pp. 232-241,
-2014.](http://dx.doi.org/10.1007/978-3-319-07566-2_24)
+Proceedings of the 25th Symposium on Combinatorial Pattern Matching (CPM), pp.
+232-241, 2014.](http://dx.doi.org/10.1007/978-3-319-07566-2_24)
 
-<a name="2"></a>[[2] J. Kärkkäinen: Fast BWT in small space by blockwise suffix sorting.
-Theoretical Computer Science 387, pp. 249–257,
+<a name="2"></a>[[2] J. Kärkkäinen: Fast BWT in small space by blockwise suffix
+sorting.  Theoretical Computer Science 387, pp. 249–257,
 2007.](http://dx.doi.org/10.1016/j.tcs.2007.07.018)
 
-<a name="3"></a>[[3] G. Nong, S. Zhang, W. H. Chan: Linear Suffix Array Construction by
-Almost Pure Induced-Sorting. Data Compression Conference, p. 193,
-2009.](http://dx.doi.org/10.1016/j.tcs.2007.07.018)
+<a name="3"></a>[[3] G. Nong, S. Zhang, W. H. Chan: Linear Suffix Array
+Construction by Almost Pure Induced-Sorting. Data Compression Conference, p.
+193, 2009.](http://dx.doi.org/10.1016/j.tcs.2007.07.018)
