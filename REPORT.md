@@ -21,18 +21,25 @@ Author: Jarno
 
 ### Z-algorithm based search
 
-Headers: include/ZAlgorithm.hpp
-Author: Martin
+* **Headers**: [naive_match.hpp](include/ZAlgorithm.hpp)
+* **Author**: Martin
+In general, the Z algorithm creates an array where Z[i] corresponds to the longest common prefix between the string and the i-th suffix. A generalized string would be one for which we have T = A$B where A and B are two strings and $ is a symbol which is not contained in either. When we want to determine all of the suffixes of a given string B which are smaller than another string A, we can utilize the information computed by the Z algorithm. Namely, if 
+Z[i] = K where i corresponds to string B, then we know that the first K characters of A and B[t..) match where t = i - |A| - 1. This means that A[K] != B[t+1] and we can just compare the characters normally. Note, that in C/C++ ending of a string is signified by a zero character \0 (having value of 0) and we can simply ignore checking for the end.   
+It has an O(N+M) space complexity and O(N+M) time complexity.
 
 ### Suffix array search
 
-Headers: include/SuffixArray.hpp
-Author: Martin
+* **Headers**: [naive_match.hpp](include/SuffixArray.hpp)
+* **Author**: Martin
+It builds a suffix array using Yuta Mori's SAIS implementation [3], an inverse suffix array and an lcp array. The time and space complexities for a text T are O(|T|). Lower and upper bound range queries are also implemented which use binary search. The worst case running time for an input of a pattern P and a text T is O(|P| * log(|T|)), but O(|P| + log(|T|)) on average.
 
 ### Crochemore-based algorithm
 
-Headers: include/Crochemore.hpp
-Author: Martin
+* **Headers**: [naive_match.hpp](include/Crochemore.hpp)
+* **Author**: Martin
+It find the suffixes in a text T which are lexicographically smaller than a given pattern P. It uses O(1) extra space and runs in O(|T| + |P|) time. It utilizes string combinatorics about the pattern to comptute the next jump to make in the text.
+The algorithm is described in full detail in [1].
+
 
 ### Algorithm based on Knuth-Morris-Pratt
 
