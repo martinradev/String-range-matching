@@ -37,10 +37,10 @@ void naive_match_range(
     typedef typename iterator_traits<input_iterator>::difference_type diff;
     typedef typename make_unsigned<diff>::type size_type;
     /* Iterate over all suffixes and compare to patterns lexicographically */
-    for (size_type i = 0; t != te; ++t, ++i, ++r) {
+    for (size_type i = 0; t != te; ++t, ++i) {
         if (
                  lexicographical_compare(t,te,u,ue) &&
-                !lexicographical_compare(t,te,l,le)) *r = i;
+                !lexicographical_compare(t,te,l,le)) *r++ = i;
     }
 }
 
