@@ -16,6 +16,7 @@
 #include <string>
 #include <fstream>
 #include <limits>
+#include <functional>
 #include <chrono>
 #include <cstdlib>
 #include <cstring>
@@ -59,9 +60,9 @@ Mandatory arguments to long options are mandatory for short options too.
 
 void usage(FILE *f, const char *app)
 {
-    fprintf(f, "Usage: %s [OPTION] TEXT BEGIN END     (1st form)\n", app);
-    fprintf(f, " or:   %s [OPTION] -f FILE BEGIN END  (2nd form)\n", app);
-    fprintf(f, " or:   %s [OPTION] -t TESTFILE        (3rd form)\n", app);
+    fprintf(f, "Usage: %s [OPTION] TEXT PATTERN1 [PATTERN2]     (1st form)\n", app);
+    fprintf(f, " or:   %s [OPTION] -f FILE PATTERN1 [PATTERN2]  (2nd form)\n", app);
+    fprintf(f, " or:   %s [OPTION] -t TESTFILE                  (3rd form)\n", app);
 }
 
 void help(FILE *f, const char *app)
@@ -110,8 +111,9 @@ typedef basic_string<char,char_traits<char>,mallocator<char>> mstring;
 /* Input data for algorithms. */
 struct input {
     mstring t;
-    mstring b;
-    mstring e;
+    mstring p1;
+    mstring p2;
+    bool ranged;
     method m;
     size_t k;
     int s;
@@ -119,7 +121,7 @@ struct input {
     bool p;
     int ret;
     input():
-        k(3), m(NAIVE), s(false), ret(0), p(false),
+        ranged(false), k(3), m(NAIVE), s(false), ret(0), p(false),
         c(numeric_limits<size_t>::max()) {}
 };
 
@@ -130,9 +132,9 @@ bool readtestfile(const char *file, input& in)
     getline(t,in.t);
     if (in.c < in.t.size()) in.t.resize(in.c);
     if (!t.good()) return false;
-    getline(t,in.b);
+    getline(t,in.p1);
     if (!t.good()) return false;
-    getline(t,in.e);
+    getline(t,in.p2);
     // ignore suffixes
     return true;
 }
@@ -209,18 +211,20 @@ bool init(int argc, char *const argv[], input& in)
     }
     switch (form) {
         case 1:
-            if (optind+3 > argc) {
-                //nag(app,"expected TEXT and BEGIN and END patterns\n");
+            if (argc == optind+2) in.ranged = false;
+            else if (argc == optind+3) in.ranged = true;
+            else {
                 help(stderr,app);
                 return fail(in);
             }
             in.t = argv[optind];
-            in.b = argv[optind+1];
-            in.e = argv[optind+2];
+            in.p1 = argv[optind+1];
+            if (in.ranged) in.p2 = argv[optind+2];
             break;
         case 2:
-            if (optind+1 > argc) {
-                //nag(app,"expected BEGIN and END patterns\n");
+            if (argc == optind+1) in.ranged = false;
+            else if (argc == optind+2) in.ranged = true;
+            else {
                 help(stderr,app);
                 return fail(in);
             }
@@ -228,8 +232,8 @@ bool init(int argc, char *const argv[], input& in)
                 nag(app,"can't read file %s\n",src.c_str());
                 return fail(in);
             }
-            in.b = argv[optind];
-            in.e = argv[optind+1];
+            in.p1 = argv[optind];
+            if (in.ranged) in.p2 = argv[optind+1];
             break;
         case 3:
             if (!readtestfile(src.c_str(),in)) {
@@ -242,6 +246,61 @@ bool init(int argc, char *const argv[], input& in)
     return true;
 }
 
+template <typename T, typename size_type = size_t>
+struct count_iterator {
+
+    /* typedefs required for stl iterators. */
+    typedef void difference_type;
+    typedef void value_type;
+    typedef void pointer;
+    typedef void reference;
+    typedef std::output_iterator_tag iterator_category;
+
+    size_type s = 0;
+
+    count_iterator& operator=(const T&) { ++s; return *this; }
+    count_iterator& operator*() { return *this; }
+    count_iterator& operator++() { return *this; }
+    count_iterator& operator++(int) { return *this; }
+
+};
+
+struct c_tag {};
+struct z_tag {};
+struct sa_tag {};
+struct naive_tag {};
+struct kmp_tag {};
+struct gs_tag {};
+
+template <typename algo_tag, 
+struct algo_traits {
+
+};
+
+
+template <typename out_policy>
+struct call_naive : out_policy {
+    void operator()() {
+        if (in.ranged)
+            rmatch::naive_match_range(in.t,in.p1,in.p2,out);
+        else
+            rmatch::naive_match_less(in.t,in.p1,out);
+    }
+};
+
+int f()
+{
+    if (asdf) {
+        if (qwer) {
+        }
+        asdf(a,b,c,d)
+    }
+}
+
+struct algo {
+    virtual 
+};
+
 int main(int argc, char *const argv[])
 {
 
@@ -250,25 +309,47 @@ int main(int argc, char *const argv[])
 
     vector<size_t,mallocator<size_t>> out;
     size_t c;
+
+    //function<void(const mstring& t, const mstring& p1, const mstring& p2, dec
+
+
     timer t(in.p);
     switch (in.m) {
+//        case C:
+//            if (in.ranged)
+//                rmatch::stringRangeMatch(in.t,in.p1,in.p2,out);
+//            else
+//                rmatch::stringLessMatch(in.t,in.p1,out);
+//            break;
+//        case Z:
+//            if (in.ranged)
+//                rmatch::stringRangeMatchZ(in.t,in.p1,in.p2,out);
+//            else
+//                rmatch::stringLessMatchZ(in.t,in.p1,out);
+//            break;
+//        case SA:
+//            if (in.ranged)
+//                rmatch::rangeQuery(in.t,in.p1,in.p2,out);
+//            else
+//                rmatch::rangeQuery(in.t,in.p1,out);
+//            break;
         case NAIVE:
-            rmatch::naive_match_range(in.t,in.b,in.e,back_inserter(out));
-            break;
-        case GS:
-            c = rmatch::gs_count_range(in.t,in.b,in.e,in.k);
-            break;
-        case C:
-            rmatch::stringRangeMatch(in.t,in.b,in.e,out);
-            break;
-        case Z:
-            rmatch::stringRangeMatchZ(in.t,in.b,in.e,out);
-            break;
-        case SA:
-            rmatch::rangeQuery(in.t,in.b,in.e,out);
+            if (in.ranged)
+                rmatch::naive_match_range(in.t,in.p1,in.p2,back_inserter(out));
+            else
+                rmatch::naive_match_less(in.t,in.p1,back_inserter(out));
             break;
         case KMP:
-            rmatch::kmp_match_range(in.t,in.b,in.e,back_inserter(out));
+            if (in.ranged)
+                rmatch::kmp_match_range(in.t,in.p1,in.p2,back_inserter(out));
+            else
+                rmatch::kmp_match_less(in.t,in.p1,back_inserter(out));
+            break;
+        case GS:
+            if (in.ranged)
+                c = rmatch::gs_count_range(in.t,in.p1,in.p2,in.k);
+            else
+                c = rmatch::gs_count_less(in.t,in.p1,in.k);
             break;
     }
     t.stop();

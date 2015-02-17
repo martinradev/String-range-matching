@@ -16,6 +16,51 @@ namespace rmatch {
 
 /**
  * Calculate indices i of suffixes t[i..n) of text t that are lexicographically
+ * smaller than pattern u; i.e. t < u.
+ *
+ * @param t Input text. (input iterator)
+ * @param te End position of input text. (input iterator)
+ * @param u Upper bound pattern. (input iterator)
+ * @param ue End position of the upper bound pattern. (input iterator)
+ * @param r Destination index sequence. (output iterator)
+ */
+template <typename input_iterator, typename output_iterator>
+void naive_match_less(
+        input_iterator t, input_iterator te,
+        input_iterator u, input_iterator ue,
+        output_iterator r)
+{
+    using namespace std;
+    typedef typename iterator_traits<input_iterator>::difference_type diff;
+    typedef typename make_unsigned<diff>::type size_type;
+    /* Iterate over all suffixes and compare to patterns lexicographically */
+    for (size_type i = 0; t != te; ++t, ++i) {
+        if (lexicographical_compare(t,te,u,ue)) *r++ = i;
+    }
+}
+
+/**
+ * Calculate indices i of suffixes t[i..n) of text t that are lexicographically
+ * smaller than pattern u; i.e. t < u.
+ *
+ * @param t Input text. (container)
+ * @param u Upper bound pattern. (container)
+ * @param r Destination index sequence. (output iterator)
+ */
+template <typename string_type, typename output_iterator>
+void naive_match_less(
+        const string_type& t,
+        const string_type& u,
+        output_iterator r)
+{
+    naive_match_less(
+            t.begin(), t.end(),
+            u.begin(), u.end(),
+            r);
+}
+
+/**
+ * Calculate indices i of suffixes t[i..n) of text t that are lexicographically
  * larger or equal to pattern l and smaller than pattern u; i.e. l <= t < u.
  *
  * @param t Input text. (input iterator)
