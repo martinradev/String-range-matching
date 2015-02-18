@@ -20,6 +20,8 @@
 #include <limits>
 #include <functional>
 #include <chrono>
+#include <memory>
+#include <sstream>
 #include <cstdlib>
 #include <cstring>
 #include <cstdarg>
@@ -28,7 +30,7 @@
 using namespace std;
 using namespace rmatch;
 
-const char *shopts = "hm:k:sf:t:c:pq";
+const char *shopts = "hm:k:sf:u:c:tqbp:";
 
 const option opts[] = {
     { "help",   no_argument,       nullptr, 'h' },
@@ -36,10 +38,12 @@ const option opts[] = {
     { "k",      required_argument, nullptr, 'k' },
     { "silent", no_argument,       nullptr, 's' },
     { "file",   required_argument, nullptr, 'f' },
-    { "test",   required_argument, nullptr, 't' },
+    { "test",   required_argument, nullptr, 'u' },
     { "cut",    required_argument, nullptr, 'c' },
-    { "time",   no_argument,       nullptr, 'p' },
+    { "time",   no_argument,       nullptr, 't' },
     { "count",  no_argument,       nullptr, 'q' },
+    { "substr", no_argument,       nullptr, 'b' },
+    { "pfile",  no_argument,       nullptr, 'p' },
     { nullptr,  no_argument,       nullptr,  0  }
 };
 
@@ -56,18 +60,26 @@ Mandatory arguments to long options are mandatory for short options too.
   -s, --silent         do not produce any output; if -p is set, timing output
                        will still be printed
   -f, --file=FILE      load text from file FILE
-  -t, --test=TESTFILE  load test file from file TESTFILE
+  -u, --test=TESTFILE  load test file from file TESTFILE; overrides other text
+                         and pattern sources
   -c, --cut=CHARS      use first CHARS characters of the source text and ignore
                        the rest
-  -p, --time           print timing output in seconds
+  -t, --time           print timing output in seconds
   -q, --count          only count the number of matches; default for method "gs"
+  -b, --substr         interpret the patterns as substring ranges of the
+                         input text; the pattern format is "i:j", where i is the
+                         beginning of the substring, inclusive, and j is the end
+                         of the substring, exclusive; i.e. t[i,j); i or j can be
+                         left empty in which case substring is extended to the
+                         beginning or end of input text respectively
+  -p, --pfile=FILE     read patterns from a file FILE; file can contain multiple
+                         queries, each query must be in its individual line;
+                         each query is read as PATTERN1 [PATTERN2]
 )STR";
 
 void usage(FILE *f, const char *app)
 {
-    fprintf(f, "Usage: %s [OPTION] TEXT PATTERN1 [PATTERN2]     (1st form)\n", app);
-    fprintf(f, " or:   %s [OPTION] -f FILE PATTERN1 [PATTERN2]  (2nd form)\n", app);
-    fprintf(f, " or:   %s [OPTION] -t TESTFILE                  (3rd form)\n", app);
+    fprintf(f, "Usage: %s [OPTION] [TEXT] [PATTERN1 [PATTERN2]]\n", app);
 }
 
 void help(FILE *f, const char *app)
@@ -112,23 +124,72 @@ enum method {
 /* The default string type for input using a custom allocator that allows
    ignoring input text allocations. */
 typedef basic_string<char,char_traits<char>,mallocator<char>> mstring;
+typedef basic_stringstream<char,char_traits<char>,mallocator<char>> msstream;
+
+struct query {
+    bool ranged;
+    mstring p1;
+    mstring p2;
+    query() {}
+    query(const char *p1) : ranged(false), p1(p1) {}
+    query(const char *p1, const char *p2) : ranged(true), p1(p1), p2(p2) {}
+};
+
+struct qstream {
+    virtual ~qstream() {}
+    virtual bool next(query& q) = 0;
+};
+
+struct qstream_file : qstream {
+    ifstream f;
+    qstream_file(const char *src) : f(src) {}
+    bool good()
+    {
+        return f.good();
+    }
+    bool next(query& q)
+    {
+        mstring line;
+        while (getline(f,line)) {
+            msstream s(line);
+            query r;
+            s >> r.p1 >> r.p2;
+            if (r.p1.empty()) continue;
+            r.ranged = !r.p2.empty();
+            q = move(r);
+            return true;
+        }
+        return false;
+    }
+};
+
+struct qstream_single : qstream {
+    query single;
+    bool done = false;
+    qstream_single(const query& q) : single(q) {}
+    qstream_single(const char *p1) : single(p1) {}
+    qstream_single(const char *p1, const char *p2) : single(p1,p2) {}
+    bool next(query& q)
+    {
+        if (done) return false;
+        q = move(single);
+        done = true;
+        return true;
+    }
+};
 
 /* Input data for algorithms. */
 struct input {
     mstring t;
-    mstring p1;
-    mstring p2;
-    bool ranged;
-    method m;
-    size_t k;
-    int s;
-    size_t c;
-    bool p;
-    bool count;
-    int ret;
-    input():
-        ranged(false), k(3), m(NAIVE), s(false), ret(0), p(false), count(false),
-        c(numeric_limits<size_t>::max()) {}
+    shared_ptr<qstream> queries;
+    method m    = NAIVE;
+    size_t k    = 3;
+    bool silent = false;
+    size_t cut  = numeric_limits<size_t>::max();
+    bool time   = false;
+    bool count  = false;
+    int ret     = 0;
+    bool substr = false;
 };
 
 bool readtestfile(const char *file, input& in)
@@ -136,11 +197,14 @@ bool readtestfile(const char *file, input& in)
     ifstream t(file);
     if (!t.good()) return false;
     getline(t,in.t);
-    if (in.c < in.t.size()) in.t.resize(in.c);
+    if (in.cut < in.t.size()) in.t.resize(in.cut);
     if (!t.good()) return false;
-    getline(t,in.p1);
+    query q;
+    q.ranged = true;
+    getline(t,q.p1);
     if (!t.good()) return false;
-    getline(t,in.p2);
+    getline(t,q.p2);
+    in.queries = make_shared<qstream_single>(q);
     // ignore suffixes
     return true;
 }
@@ -156,8 +220,9 @@ bool init(int argc, char *const argv[], input& in)
 {
     char c;
     const char *app = argv[0];
-    int form = 1;
+    bool f = false, u = false, p = false;
     mstring src;
+    mstring psrc;
     while ((c = getopt_long(argc, argv, shopts, opts, nullptr)) != -1) {
         switch (c) {
             case 'h':
@@ -189,28 +254,35 @@ bool init(int argc, char *const argv[], input& in)
                 }
                 break;
             case 's':
-                in.s = true;
+                in.silent = true;
                 break;
             case 'f':
-                form = 2;
+                f = true;
                 src = optarg;
                 break;
-            case 't':
-                form = 3;
+            case 'u':
+                u = true;
                 src = optarg;
                 break;
             case 'c':
-                in.c = atol(optarg);
-                if (in.c == 0) {
+                in.cut = atol(optarg);
+                if (in.cut == 0) {
                     nag(app,"CHARS must be a positive integer\n");
                     return fail(in);
                 }
                 break;
-            case 'p':
-                in.p = true;
+            case 't':
+                in.time = true;
                 break;
             case 'q':
                 in.count = true;
+                break;
+            case 'b':
+                in.substr = true;
+                break;
+            case 'p':
+                p = true;
+                psrc = optarg;
                 break;
             case '?':
             default:
@@ -218,64 +290,65 @@ bool init(int argc, char *const argv[], input& in)
                 return fail(in);
         }
     }
-    switch (form) {
-        case 1:
-            if (argc == optind+2) in.ranged = false;
-            else if (argc == optind+3) in.ranged = true;
-            else {
-                help(stderr,app);
-                return fail(in);
-            }
-            in.t = argv[optind];
-            in.p1 = argv[optind+1];
-            if (in.ranged) in.p2 = argv[optind+2];
-            break;
-        case 2:
-            if (argc == optind+1) in.ranged = false;
-            else if (argc == optind+2) in.ranged = true;
-            else {
-                help(stderr,app);
-                return fail(in);
-            }
-            if (!readfile(src.c_str(),in.t,in.c)) {
-                nag(app,"can't read file %s\n",src.c_str());
-                return fail(in);
-            }
-            in.p1 = argv[optind];
-            if (in.ranged) in.p2 = argv[optind+1];
-            break;
-        case 3:
-            if (!readtestfile(src.c_str(),in)) {
-                nag(app,"can't read test file %s\n",src.c_str());
-                return fail(in);
-            }
-        default:
-            break;
+    if (u) {
+        // read from test file, ignore other inputs
+        if (!readtestfile(src.c_str(),in)) {
+            nag(app,"can't read test file %s\n",src.c_str());
+            return fail(in);
+        }
+        return true;
+    }
+    if (f) {
+        // read text from file
+        if (!readfile(src.c_str(),in.t,in.cut)) {
+            nag(app,"can't read file %s\n",src.c_str());
+            return fail(in);
+        }
+    } else {
+        // read text from the first positional parameter
+        if (argc <= optind) {
+            help(stderr,app);
+            return fail(in);
+        }
+        in.t = argv[optind++];
+    }
+    if (p) {
+        // read patterns from a file
+        in.queries = make_shared<qstream_file>(psrc.c_str());
+        if (!static_pointer_cast<qstream_file>(in.queries)->good()) {
+            nag(app,"can't read pattern file %s\n",psrc.c_str());
+            return fail(in);
+        }
+    } else {
+        // read patterns from positional parameters
+        if (argc == optind+1)
+            in.queries = make_shared<qstream_single>(argv[optind]);
+        if (argc == optind+2)
+            in.queries = make_shared<qstream_single>(argv[optind],
+                    argv[optind+1]);
     }
     return true;
 }
 
 #define RUN_ALGO(algo) \
-if (in.ranged) { \
+if (q.ranged) { \
     if (in.count) { \
-        algo##_match_range(in.t,in.p1,in.p2,counter(out)); \
+        algo##_match_range(in.t,q.p1,q.p2,counter(out)); \
     } else { \
-        algo##_match_range(in.t,in.p1,in.p2,back_inserter(out)); \
+        algo##_match_range(in.t,q.p1,q.p2,back_inserter(out)); \
     } \
 } else { \
     if (in.count) { \
-        algo##_match_less(in.t,in.p1,counter(out)); \
+        algo##_match_less(in.t,q.p1,counter(out)); \
     } else { \
-        algo##_match_less(in.t,in.p1,back_inserter(out)); \
+        algo##_match_less(in.t,q.p1,back_inserter(out)); \
     } \
 }
 
-int main(int argc, char *const argv[])
+void run_query(const input& in, const query& q)
 {
-    input in;
-    if (!init(argc, argv, in)) return in.ret;
     vector<size_t,mallocator<size_t>> out;
-    timer t(in.p);
+    timer t(in.time);
     switch (in.m) {
         case C:     RUN_ALGO(crochemore);   break;
         case Z:     RUN_ALGO(z);            break;
@@ -283,13 +356,24 @@ int main(int argc, char *const argv[])
         case NAIVE: RUN_ALGO(naive);        break;
         case KMP:   RUN_ALGO(kmp);          break;
         case GS:
-            if (in.ranged)
-                gs_count_range(in.t,in.p1,in.p2,in.k,back_inserter(out));
+            if (q.ranged)
+                gs_count_range(in.t,q.p1,q.p2,in.k,back_inserter(out));
             else
-                gs_count_less(in.t,in.p1,in.k,back_inserter(out));
+                gs_count_less(in.t,q.p1,in.k,back_inserter(out));
             break;
     }
     t.stop();
+    if (in.silent) return;
     for (auto v: out) printf("%ld\n",v);
+}
+
+int main(int argc, char *const argv[])
+{
+    input in;
+    if (!init(argc, argv, in)) return in.ret;
+    query q;
+    while (in.queries->next(q)) {
+        run_query(in,q);
+    }
     return 0;
 }
