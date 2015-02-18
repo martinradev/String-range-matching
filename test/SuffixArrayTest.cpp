@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <vector>
 using namespace std;
+using namespace rmatch;
 
 /*!
     does a simple test to check whether the indices match

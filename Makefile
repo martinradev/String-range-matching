@@ -13,7 +13,7 @@ TBIN=test
 TDIR=test
 TSRCS=TestSuite.cpp main.cpp ChrochemoreTest.cpp SuffixArrayTest.cpp \
 			TestGenerator.cpp TestSuite.cpp ZAlgorithmTest.cpp \
-			range_count_test.cpp
+			gs_count_test.cpp kmp_match_test.cpp naive_match_test.cpp
 
 OUT=out
 BINOUT=$(OUT)/bin
@@ -41,6 +41,7 @@ all: $(RFULLBIN) $(TFULLBIN)
 $(RBIN): $(RFULLBIN)
 .PHONY: $(TBIN)
 $(TBIN): $(TFULLBIN)
+	$(TFULLBIN)
 
 SIMPLETEST=simple_test.txt
 SIMPLETESTSRC=$(TDIR)/$(SIMPLETEST)
@@ -56,16 +57,16 @@ $(BINOUT)/$(TBIN): $(TOBJS) | $(BINOUT) $(SIMPLETESTDST)
 
 # disable optimization for this file
 $(ROBJDIR)/mallocate.o: $(RDIR)/mallocate.cpp | $(ROBJDIR)
-	$(CXX) -c $(CPPSTD) -o $@ $<
+	$(CXX) -c $(CPPSTD) $(CFLAGS) -o $@ $<
 
 $(OUT)/%.o: %.cpp
-	$(CXX) -c $(CPPFLAGS) -o $@ $<
+	$(CXX) -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
 
 FIXDEP=bash ./scripts/fix_depend.sh
 
 $(DEPEND): $(FULLSRCS) | $(DEPENDDIR)
-	$(CXX) $(CPPFLAGS) -MM $(RFULLSRCS) | $(FIXDEP) "$(EROBJDIR)" > $@
-	$(CXX) $(CPPFLAGS) -MM $(TFULLSRCS) | $(FIXDEP) "$(ETOBJDIR)" >> $@
+	$(CXX) $(CPPFLAGS) $(CFLAGS) -MM $(RFULLSRCS) | $(FIXDEP) "$(EROBJDIR)" > $@
+	$(CXX) $(CPPFLAGS) $(CFLAGS) -MM $(TFULLSRCS) | $(FIXDEP) "$(ETOBJDIR)" >> $@
 
 # test data
 
