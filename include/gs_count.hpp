@@ -176,7 +176,7 @@ void gs_count_range(
         index_type k,
         output_iterator r)
 {
-    *r++ = gs_count_less_range(t,n,l,m1,u,m2,k);
+    *r++ = gs_count_range(t,n,l,m1,u,m2,k);
 }
 
 /**
@@ -212,7 +212,7 @@ void gs_count_range(
         index_type k,
         output_iterator r)
 {
-    gs_count_less_range(
+    gs_count_range(
             t.begin(),t.size(),
             l.begin(),l.size(),
             u.begin(),u.size(),

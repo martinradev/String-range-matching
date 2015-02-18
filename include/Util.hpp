@@ -13,11 +13,11 @@ namespace rmatch {
         bits for which we have ones only in either one of them
         It returns the positions of those bits.
     */
-    template <typename output_container>
+    template <typename output_iterator>
     void retrieveRangeIndices(
             const boost::dynamic_bitset<> & lowbits,
             const boost::dynamic_bitset<> & topbits,
-            output_container& positions)
+            output_iterator positions)
     {
         /*
             we have the bitsets for the lower and the upper bound
@@ -27,13 +27,6 @@ namespace rmatch {
             we just have to do an XOR
         */
         const boost::dynamic_bitset<> XOR = lowbits ^ topbits;
-
-        /*
-            we have the bits now 1 where the suffix is in the given bound
-            we have to search for them.
-            XOR.count() gives the count of the bits where we have 1
-        */
-        positions.reserve(XOR.count());
 
         size_t i = XOR.find_first();
 
@@ -45,7 +38,7 @@ namespace rmatch {
         */
         while (i != XOR.npos)
         {
-            positions.push_back(i);
+            *positions++ = i;
             i = XOR.find_next(i);
         }
     }
@@ -55,7 +48,7 @@ namespace rmatch {
             const boost::dynamic_bitset<> & topbits)
     {
         std::vector<size_t> positions;
-        retrieveRangeIndices(lowbits,topbits,positions);
+        retrieveRangeIndices(lowbits,topbits,std::back_inserter(positions));
         return std::move(positions);
     }
 }

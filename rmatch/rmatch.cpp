@@ -13,6 +13,8 @@
 #include "kmp_match.hpp"
 #include "mallocate.hpp"
 #include "timer.hpp"
+#include "count_iterator.hpp"
+#include "algo_wrap.hpp"
 #include <string>
 #include <fstream>
 #include <limits>
@@ -24,8 +26,9 @@
 #include <getopt.h>
 
 using namespace std;
+using namespace rmatch;
 
-const char *shopts = "hm:k:sf:t:c:p";
+const char *shopts = "hm:k:sf:t:c:pq";
 
 const option opts[] = {
     { "help",   no_argument,       nullptr, 'h' },
@@ -36,6 +39,7 @@ const option opts[] = {
     { "test",   required_argument, nullptr, 't' },
     { "cut",    required_argument, nullptr, 'c' },
     { "time",   no_argument,       nullptr, 'p' },
+    { "count",  no_argument,       nullptr, 'q' },
     { nullptr,  no_argument,       nullptr,  0  }
 };
 
@@ -56,6 +60,7 @@ Mandatory arguments to long options are mandatory for short options too.
   -c, --cut=CHARS      use first CHARS characters of the source text and ignore
                        the rest
   -p, --time           print timing output in seconds
+  -q, --count          only count the number of matches; default for method "gs"
 )STR";
 
 void usage(FILE *f, const char *app)
@@ -119,9 +124,10 @@ struct input {
     int s;
     size_t c;
     bool p;
+    bool count;
     int ret;
     input():
-        ranged(false), k(3), m(NAIVE), s(false), ret(0), p(false),
+        ranged(false), k(3), m(NAIVE), s(false), ret(0), p(false), count(false),
         c(numeric_limits<size_t>::max()) {}
 };
 
@@ -203,6 +209,9 @@ bool init(int argc, char *const argv[], input& in)
             case 'p':
                 in.p = true;
                 break;
+            case 'q':
+                in.count = true;
+                break;
             case '?':
             default:
                 // getopt prints errors
@@ -246,115 +255,41 @@ bool init(int argc, char *const argv[], input& in)
     return true;
 }
 
-template <typename T, typename size_type = size_t>
-struct count_iterator {
-
-    /* typedefs required for stl iterators. */
-    typedef void difference_type;
-    typedef void value_type;
-    typedef void pointer;
-    typedef void reference;
-    typedef std::output_iterator_tag iterator_category;
-
-    size_type s = 0;
-
-    count_iterator& operator=(const T&) { ++s; return *this; }
-    count_iterator& operator*() { return *this; }
-    count_iterator& operator++() { return *this; }
-    count_iterator& operator++(int) { return *this; }
-
-};
-
-struct c_tag {};
-struct z_tag {};
-struct sa_tag {};
-struct naive_tag {};
-struct kmp_tag {};
-struct gs_tag {};
-
-template <typename algo_tag, 
-struct algo_traits {
-
-};
-
-
-template <typename out_policy>
-struct call_naive : out_policy {
-    void operator()() {
-        if (in.ranged)
-            rmatch::naive_match_range(in.t,in.p1,in.p2,out);
-        else
-            rmatch::naive_match_less(in.t,in.p1,out);
-    }
-};
-
-int f()
-{
-    if (asdf) {
-        if (qwer) {
-        }
-        asdf(a,b,c,d)
-    }
+#define RUN_ALGO(algo) \
+if (in.ranged) { \
+    if (in.count) { \
+        algo##_match_range(in.t,in.p1,in.p2,counter(out)); \
+    } else { \
+        algo##_match_range(in.t,in.p1,in.p2,back_inserter(out)); \
+    } \
+} else { \
+    if (in.count) { \
+        algo##_match_less(in.t,in.p1,counter(out)); \
+    } else { \
+        algo##_match_less(in.t,in.p1,back_inserter(out)); \
+    } \
 }
-
-struct algo {
-    virtual 
-};
 
 int main(int argc, char *const argv[])
 {
-
     input in;
     if (!init(argc, argv, in)) return in.ret;
-
     vector<size_t,mallocator<size_t>> out;
-    size_t c;
-
-    //function<void(const mstring& t, const mstring& p1, const mstring& p2, dec
-
-
     timer t(in.p);
     switch (in.m) {
-//        case C:
-//            if (in.ranged)
-//                rmatch::stringRangeMatch(in.t,in.p1,in.p2,out);
-//            else
-//                rmatch::stringLessMatch(in.t,in.p1,out);
-//            break;
-//        case Z:
-//            if (in.ranged)
-//                rmatch::stringRangeMatchZ(in.t,in.p1,in.p2,out);
-//            else
-//                rmatch::stringLessMatchZ(in.t,in.p1,out);
-//            break;
-//        case SA:
-//            if (in.ranged)
-//                rmatch::rangeQuery(in.t,in.p1,in.p2,out);
-//            else
-//                rmatch::rangeQuery(in.t,in.p1,out);
-//            break;
-        case NAIVE:
-            if (in.ranged)
-                rmatch::naive_match_range(in.t,in.p1,in.p2,back_inserter(out));
-            else
-                rmatch::naive_match_less(in.t,in.p1,back_inserter(out));
-            break;
-        case KMP:
-            if (in.ranged)
-                rmatch::kmp_match_range(in.t,in.p1,in.p2,back_inserter(out));
-            else
-                rmatch::kmp_match_less(in.t,in.p1,back_inserter(out));
-            break;
+        case C:     RUN_ALGO(crochemore);   break;
+        case Z:     RUN_ALGO(z);            break;
+        case SA:    RUN_ALGO(sa);           break;
+        case NAIVE: RUN_ALGO(naive);        break;
+        case KMP:   RUN_ALGO(kmp);          break;
         case GS:
             if (in.ranged)
-                c = rmatch::gs_count_range(in.t,in.p1,in.p2,in.k);
+                gs_count_range(in.t,in.p1,in.p2,in.k,back_inserter(out));
             else
-                c = rmatch::gs_count_less(in.t,in.p1,in.k);
+                gs_count_less(in.t,in.p1,in.k,back_inserter(out));
             break;
     }
     t.stop();
-
-    if (!in.s && in.m != GS) for (auto v: out) printf("%ld\n",v);
-    if (!in.s && in.m == GS) printf("%ld\n",c);
+    for (auto v: out) printf("%ld\n",v);
     return 0;
 }

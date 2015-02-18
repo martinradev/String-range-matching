@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <string>
+#include <iterator>
 #include <boost/dynamic_bitset.hpp>
 
 namespace rmatch
@@ -93,8 +94,8 @@ boost::dynamic_bitset<> lowerBoundZ(const string_type & text, const string_type 
     Finds all of the suffixes of \a text which are bigger than \a low and smaller than \a top.
     The positions are stored in \a positions.
 */
-template <typename string_type, typename output_container>
-void stringRangeMatchZ(const string_type & text, const string_type & low, const string_type & top, output_container& positions)
+template <typename string_type, typename output_iterator>
+void stringRangeMatchZ(const string_type & text, const string_type & low, const string_type & top, output_iterator positions)
 {
     boost::dynamic_bitset<> lowbits = lowerBoundZ(text,low);
     boost::dynamic_bitset<> topbits = lowerBoundZ(text,top);
@@ -109,9 +110,10 @@ template<typename string_type>
 std::vector<size_t> stringRangeMatchZ(const string_type & text, const string_type & low, const string_type & top)
 {
     std::vector<size_t> positions;
-    stringRangeMatchZ(text,low,top,positions);
+    stringRangeMatchZ(text,low,top,std::back_inserter(positions));
     return std::move(positions);
 }
+
 }
 
 #endif // Z_ALGORITHM_HPP
