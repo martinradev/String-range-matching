@@ -163,9 +163,9 @@ index_type gs_count_range(
         string_type e, index_type m2,
         index_type k)
 {
-    return
-        gs_count_less(x,n,e,m2,k)-
-        gs_count_less(x,n,b,m1,k);
+    index_type l = gs_count_less(x,n,b,m1,k);
+    index_type u = gs_count_less(x,n,e,m2,k);
+    return u < l ? 0 : u - l;
 }
 
 template <typename string_type, typename index_type, typename output_iterator>
