@@ -92,4 +92,10 @@ inline bool operator==(const mallocator<T>&, const mallocator<U>&)
     return true;
 }
 
+template <typename T, typename U>
+inline bool operator!=(const mallocator<T>&, const mallocator<U>&)
+{
+    return false;
+}
+
 #endif
