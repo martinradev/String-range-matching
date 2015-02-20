@@ -7,7 +7,7 @@ CPPFLAGS=$(CPPSTD) -O2
 
 RBIN=rmatch
 RDIR=rmatch
-RSRCS=rmatch.cpp mallocate.cpp timer.cpp
+RSRCS=rmatch.cpp mallocate.cpp timer.cpp init.cpp algo_def.cpp
 
 TBIN=test
 TDIR=test

@@ -1,3 +1,7 @@
+/*
+ * Wrap selected algorithm functions to fit the common naming scheme.
+ */
+
 #ifndef ALGO_WRAP_HPP
 #define ALGO_WRAP_HPP
 

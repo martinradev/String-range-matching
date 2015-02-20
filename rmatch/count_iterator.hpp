@@ -1,3 +1,10 @@
+/*
+ * Output iterator that counts the number of times a value has been assigned to
+ * it.
+ *
+ * Copyright (c) 2015 Jarno Leppänen
+ */
+
 #ifndef COUNT_ITERATOR_HPP
 #define COUNT_ITERATOR_HPP
 
