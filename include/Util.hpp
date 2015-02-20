@@ -26,7 +26,7 @@ namespace rmatch {
             we have to set those bits to 0
             we just have to do an XOR
         */
-        const boost::dynamic_bitset<> XOR = lowbits ^ topbits;
+        const boost::dynamic_bitset<> XOR = topbits - lowbits;
 
         size_t i = XOR.find_first();
 
