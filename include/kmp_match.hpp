@@ -203,6 +203,8 @@ private:
         const string_type p = ctx->p;
         const std::vector<index_type>& lcp = ctx->lcp;
 
+        using namespace std;
+
         while (i <= n) {
             // t[i,n) is the suffix being compared to p
             // t[j,k) is a previously found prefix of p with maximal k
@@ -211,7 +213,8 @@ private:
                 k = i;
                 l = 0;
             } else {
-                l = lcp[i-j];
+                // lcp[i] = lcp(p,p[i+1,m))
+                l = lcp[i-j-1];
             }
             if (i+l == k) {
                 while (l < m && k < n && p[l] == t[k]) {
@@ -223,7 +226,7 @@ private:
                 l = k-i;
                 j = i;
             }
-            // Post-condition: l = lcp(T[i,n),P)
+            // Post-condition: l = lcp(t[i,n),p)
             if (l != m && (i + l == n || t[i+l] < p[l])) {
                 v = i++;
                 return;
