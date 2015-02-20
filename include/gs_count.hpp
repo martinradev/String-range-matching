@@ -100,6 +100,48 @@ index_type gs_count_less(
     return count;
 }
 
+template <typename string_type, typename index_type, typename output_iterator>
+void gs_count_less(
+        string_type t, index_type n,
+        string_type u, index_type m,
+        index_type k,
+        output_iterator r)
+{
+    *r++ = gs_count_less(t,n,u,m,k);
+}
+
+/**
+ * Calculate the number of suffixes in a text t that are lexicographically
+ * smaller than pattern u; i.e. t < u.
+ *
+ * @param t Input text. (random access container)
+ * @param u Input pattern. (random access container)
+ * @param k Constant k used in calculating the k-hrps of the patterns. This
+ * should be larger or equal to 3.
+ * @return Number of matching suffixes in the text.
+ */
+template <typename string_type>
+typename string_type::size_type gs_count_less(
+        const string_type& t,
+        const string_type& u,
+        typename string_type::size_type k)
+{
+    return gs_count_less(
+            t.begin(),t.size(),
+            u.begin(),u.size(),
+            k);
+}
+
+template <typename string_type, typename output_iterator>
+void gs_count_less(
+        const string_type& t,
+        const string_type& u,
+        typename string_type::size_type k,
+        output_iterator r)
+{
+    gs_count_less(t.begin(),t.size(),u.begin(),u.size(),k,r);
+}
+
 /**
  * Calculate the number of suffixes in a text x that are lexicographically
  * larger or equal to pattern b and smaller than pattern e; i.e. b <= x < e.
@@ -121,9 +163,20 @@ index_type gs_count_range(
         string_type e, index_type m2,
         index_type k)
 {
-    return
-        gs_count_less(x,n,e,m2,k)-
-        gs_count_less(x,n,b,m1,k);
+    index_type l = gs_count_less(x,n,b,m1,k);
+    index_type u = gs_count_less(x,n,e,m2,k);
+    return u < l ? 0 : u - l;
+}
+
+template <typename string_type, typename index_type, typename output_iterator>
+void gs_count_range(
+        string_type t, index_type n,
+        string_type l, index_type m1,
+        string_type u, index_type m2,
+        index_type k,
+        output_iterator r)
+{
+    *r++ = gs_count_range(t,n,l,m1,u,m2,k);
 }
 
 /**
@@ -149,6 +202,21 @@ typename string_type::size_type gs_count_range(
             b.begin(),b.size(),
             e.begin(),e.size(),
             k);
+}
+
+template <typename string_type, typename index_type, typename output_iterator>
+void gs_count_range(
+        const string_type& t,
+        const string_type& l,
+        const string_type& u,
+        index_type k,
+        output_iterator r)
+{
+    gs_count_range(
+            t.begin(),t.size(),
+            l.begin(),l.size(),
+            u.begin(),u.size(),
+            k,r);
 }
 
 } // rmatch

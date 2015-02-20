@@ -203,6 +203,8 @@ private:
         const string_type p = ctx->p;
         const std::vector<index_type>& lcp = ctx->lcp;
 
+        using namespace std;
+
         while (i <= n) {
             // t[i,n) is the suffix being compared to p
             // t[j,k) is a previously found prefix of p with maximal k
@@ -211,7 +213,8 @@ private:
                 k = i;
                 l = 0;
             } else {
-                l = lcp[i-j];
+                // lcp[i] = lcp(p,p[i+1,m))
+                l = lcp[i-j-1];
             }
             if (i+l == k) {
                 while (l < m && k < n && p[l] == t[k]) {
@@ -223,7 +226,7 @@ private:
                 l = k-i;
                 j = i;
             }
-            // Post-condition: l = lcp(T[i,n),P)
+            // Post-condition: l = lcp(t[i,n),p)
             if (l != m && (i + l == n || t[i+l] < p[l])) {
                 v = i++;
                 return;
@@ -252,6 +255,43 @@ private:
 
 /**
  * Calculate indices i of suffixes t[i..n) of text t that are lexicographically
+ * smaller than pattern p.
+ *
+ * @param t Input text. (random access iterator)
+ * @param n Size of the input text.
+ * @param p Input pattern. (random access iterator)
+ * @param m Size of the input pattern.
+ * @param r Destination index sequence. (output iterator)
+ */
+template <typename string_type, typename size_type, typename output_iterator>
+void kmp_match_less(
+        string_type t, size_type n,
+        string_type p, size_type m,
+        output_iterator r)
+{
+    auto i = kmp_match_less_iterator<string_type, size_type>(t,n,p,m);
+    std::copy(i,i.end(),r);
+}
+
+/**
+ * Calculate indices i of suffixes t[i..n) of text t that are lexicographically
+ * smaller than pattern p.
+ *
+ * @param t Input text. (random access container)
+ * @param p Input pattern. (random access iterator)
+ * @param r Destination index sequence. (output iterator)
+ */
+template <typename string_type, typename output_iterator>
+void kmp_match_less(
+        const string_type& t,
+        const string_type& p,
+        output_iterator r)
+{
+    kmp_match_less(t.begin(),t.size(),p.begin(),p.size(),r);
+}
+
+/**
+ * Calculate indices i of suffixes t[i..n) of text t that are lexicographically
  * larger or equal to pattern l and smaller than pattern u; i.e. l <= t < u.
  *
  * @param t Input text. (random access iterator)
@@ -269,7 +309,6 @@ void kmp_match_range(
         string_type u, size_type um,
         output_iterator r)
 {
-    using namespace std;
     auto li = kmp_match_less_iterator<string_type, size_type>(t,n,l,lm);
     auto ui = kmp_match_less_iterator<string_type, size_type>(t,n,u,um);
     std::set_difference(ui,ui.end(),li,li.end(),r);
@@ -279,9 +318,9 @@ void kmp_match_range(
  * Calculate indices i of suffixes t[i..n) of text t that are lexicographically
  * larger or equal to pattern l and smaller than pattern u; i.e. l <= t < u.
  *
- * @param t Input text. (random access iterator)
- * @param l Lower bound pattern. (random access iterator)
- * @param u Upper bound pattern. (random access iterator)
+ * @param t Input text. (random access container)
+ * @param l Lower bound pattern. (random access container)
+ * @param u Upper bound pattern. (random access container)
  * @param r Destination index sequence. (output iterator)
  */
 template <typename string_type, typename output_iterator>

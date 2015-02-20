@@ -138,8 +138,8 @@ boost::dynamic_bitset<> lowerBound(const string_type & text, const string_type &
     puts the starting positions of all suffixes in \a text which are lexicographically
     in the range [low,top) in \a positions
 */
-template<typename string_type, typename output_container>
-void stringRangeMatch(const string_type & text, const string_type & low, const string_type & top, output_container& positions)
+template<typename string_type, typename output_iterator>
+void stringRangeMatch(const string_type & text, const string_type & low, const string_type & top, output_iterator positions)
 {
     using namespace std;
     boost::dynamic_bitset<> lowbits = lowerBound(text,low);
@@ -155,7 +155,7 @@ template<typename string_type>
 std::vector<size_t> stringRangeMatch(const string_type & text, const string_type & low, const string_type & top)
 {
     std::vector<size_t> positions;
-    stringRangeMatch(text,low,top,positions);
+    stringRangeMatch(text,low,top,std::back_inserter(positions));
     return std::move(positions);
 }
 

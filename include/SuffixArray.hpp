@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <iostream>
+#include <iterator>
 
 namespace rmatch {
 /*!
@@ -137,8 +138,8 @@ class SuffixArray {
         stores the starting positions of the suffixes which are
         bigger or equal than \a bottom and smaller than \a top.
     */
-    template <typename output_container>
-    void rangeQuery(const string_type & bottom, const string_type & top, output_container& positions) {
+    template <typename output_iterator>
+    void rangeQuery(const string_type & bottom, const string_type & top, output_iterator positions) {
         int from = upperBound(bottom);
         int to = lowerBound(top);
         if (from > to) {
@@ -147,10 +148,9 @@ class SuffixArray {
             */
             return;
         }
-        positions.resize(to-from+1);
         int i = 0;
         while (from+i <= to) {
-            positions[i] = m_array[from+i];
+            *positions++ = m_array[from+i];
             ++i;
         }
     }
@@ -161,13 +161,13 @@ class SuffixArray {
     */
     std::vector<size_t> rangeQuery(const string_type & bottom, const string_type & top) {
         std::vector<size_t> positions;
-        rangeQuery(bottom,top,positions);
+        rangeQuery(bottom,top,std::back_inserter(positions));
         return positions;
     }
 };
     
-    template <typename string_type, typename output_container>
-    void rangeQuery(const string_type& t, const string_type& b, const string_type& e, output_container& o)
+    template <typename string_type, typename output_iterator>
+    void rangeQuery(const string_type& t, const string_type& b, const string_type& e, output_iterator o)
     {
         SuffixArray<string_type>(t).rangeQuery(b,e,o);
     }
