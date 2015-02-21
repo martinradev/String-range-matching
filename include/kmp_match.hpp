@@ -211,7 +211,8 @@ private:
                 k = i;
                 l = 0;
             } else {
-                l = lcp[i-j];
+                // lcp[i] = lcp(p,p[i+1,m))
+                l = lcp[i-j-1];
             }
             if (i+l == k) {
                 while (l < m && k < n && p[l] == t[k]) {
