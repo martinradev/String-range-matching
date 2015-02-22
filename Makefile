@@ -9,6 +9,10 @@ RBIN=rmatch
 RDIR=rmatch
 RSRCS=rmatch.cpp mallocate.cpp timer.cpp init.cpp algo_def.cpp
 
+GBIN=genfib
+GDIR=genfib
+GSRCS=genfib.cpp
+
 TBIN=test
 TDIR=test
 TSRCS=TestSuite.cpp main.cpp ChrochemoreTest.cpp SuffixArrayTest.cpp \
@@ -25,16 +29,22 @@ ROBJS=$(addprefix $(ROBJDIR)/,$(subst .cpp,.o,$(RSRCS)))
 RFULLBIN=$(BINOUT)/$(RBIN)
 EROBJDIR=$(subst /,\/,$(ROBJDIR))
 
+GFULLSRCS=$(addprefix $(GDIR)/,$(GSRCS))
+GOBJDIR=$(OUT)/$(GDIR)
+GOBJS=$(addprefix $(GOBJDIR)/,$(subst .cpp,.o,$(GSRCS)))
+GFULLBIN=$(BINOUT)/$(GBIN)
+EGOBJDIR=$(subst /,\/,$(GOBJDIR))
+
 TFULLSRCS=$(addprefix $(TDIR)/,$(TSRCS))
 TOBJDIR=$(OUT)/$(TDIR)
 TOBJS=$(addprefix $(TOBJDIR)/,$(subst .cpp,.o,$(TSRCS)))
 TFULLBIN=$(BINOUT)/$(TBIN)
 ETOBJDIR=$(subst /,\/,$(TOBJDIR))
 
-FULLSRCS=$(RFULLSRCS) $(TFULLSRCS)
+FULLSRCS=$(RFULLSRCS) $(TFULLSRCS) $(GFULLSRCS)
 
 .PHONY: all
-all: $(RFULLBIN) $(TFULLBIN)
+all: $(RFULLBIN) $(TFULLBIN) $(GFULLBIN)
 
 .PHONY: help
 help:
@@ -53,6 +63,8 @@ $(RBIN): $(RFULLBIN)
 .PHONY: $(TBIN)
 $(TBIN): $(TFULLBIN)
 	$(TFULLBIN)
+.PHONY: $(GBIN)
+$(GBIN): $(GFULLBIN)
 
 SIMPLETEST=simple_test.txt
 SIMPLETESTSRC=$(TDIR)/$(SIMPLETEST)
@@ -64,6 +76,8 @@ $(SIMPLETESTDST): $(SIMPLETESTSRC) | $(BINOUT)
 $(BINOUT)/$(RBIN): $(ROBJS) | $(BINOUT)
 	$(CXX) -o $@ $^ $(LDLIBS)
 $(BINOUT)/$(TBIN): $(TOBJS) | $(BINOUT) $(SIMPLETESTDST)
+	$(CXX) -o $@ $^ $(LDLIBS)
+$(GFULLBIN): $(GOBJS) | $(BINOUT)
 	$(CXX) -o $@ $^ $(LDLIBS)
 
 # disable optimization for this file
@@ -78,6 +92,7 @@ FIXDEP=bash ./scripts/fix_depend.sh
 $(DEPEND): $(FULLSRCS) | $(OUT)
 	$(CXX) $(CPPFLAGS) $(CFLAGS) -MM $(RFULLSRCS) | $(FIXDEP) "$(EROBJDIR)" > $@
 	$(CXX) $(CPPFLAGS) $(CFLAGS) -MM $(TFULLSRCS) | $(FIXDEP) "$(ETOBJDIR)" >> $@
+	$(CXX) $(CPPFLAGS) $(CFLAGS) -MM $(GFULLSRCS) | $(FIXDEP) "$(EGOBJDIR)" >> $@
 
 # test data
 
@@ -132,6 +147,8 @@ $(BINOUT):
 $(ROBJDIR):
 	$(MKDIR) $@
 $(TOBJDIR):
+	$(MKDIR) $@
+$(GOBJDIR):
 	$(MKDIR) $@
 $(TESTDATADIR):
 	$(MKDIR) $@
