@@ -8,6 +8,7 @@
 #include <sstream>
 #include <regex>
 #include <fstream>
+#include <iterator>
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
@@ -93,11 +94,7 @@ bool readfile(const char *file, string_type& s)
 {
     ifstream t(file);
     if (!t.good()) return false;
-    t.seekg(0, ios::end);
-    auto size = t.tellg();
-    s.resize(size);
-    t.seekg(0);
-    t.read(&s[0], size);
+    s.assign(istreambuf_iterator<char>(t), istreambuf_iterator<char>());
     return true;
 }
 
