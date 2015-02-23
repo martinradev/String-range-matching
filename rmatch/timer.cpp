@@ -24,7 +24,9 @@ timer::timer(bool print):
 timer::~timer()
 {
     stop();
-    if (print) printf("%f\n",span);
+    if (!print) return;
+    printf("%f\n",span);
+    fflush(stdout);
 }
 
 void timer::stop()
