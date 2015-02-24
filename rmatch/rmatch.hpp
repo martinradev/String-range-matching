@@ -31,14 +31,25 @@ struct qstream;
 struct input {
     mstring t;
     std::shared_ptr<qstream> queries;
-    method m    = NAIVE;
-    size_t k    = 3;
-    bool silent = false;
-    bool time   = false;
-    bool count  = false;
-    int ret     = 0;
-    bool extend = false;
-    bool debug  = false;
+    method m;
+    size_t k;
+    bool silent;
+    bool time;
+    bool count;
+    int ret;
+    bool extend;
+    bool debug;
+
+    input():
+        m(NAIVE),
+        k(3),
+        silent(false),
+        time(false),
+        count(false),
+        ret(0),
+        extend(false),
+        debug(false)
+    {}
 
     // parse pattern parameter
     mstring pattern(const char *p) const;
@@ -48,6 +59,11 @@ struct query {
     bool ranged;
     mstring p1;
     mstring p2;
+    query(): ranged(false) {}
+    query(const mstring& p1):
+        ranged(false), p1(p1) {}
+    query(const mstring& p1, const mstring& p2):
+        ranged(true), p1(p1), p2(p2) {}
 };
 
 struct qstream {

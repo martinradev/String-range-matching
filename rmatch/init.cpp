@@ -134,7 +134,7 @@ struct qstream_file : qstream {
             s >> a >> b;
             if (a.empty()) continue;
             if (b.empty()) q = query{false,in.pattern(a.c_str())};
-            else q = query{true,in.pattern(a.c_str()),in.pattern(b.c_str())};
+            else q = query(in.pattern(a.c_str()),in.pattern(b.c_str()));
             return true;
         }
         return false;
@@ -143,13 +143,13 @@ struct qstream_file : qstream {
 
 struct qstream_single : qstream {
     query single;
-    bool done = false;
+    bool done;
     qstream_single(const query& q) :
-        single(q) {}
+        done(false), single(q) {}
     qstream_single(input& in, const char *p1) :
-        single{false,in.pattern(p1)} {}
+        done(false), single(in.pattern(p1)) {}
     qstream_single(input& in, const char *p1, const char *p2) :
-        single{true,in.pattern(p1),in.pattern(p2)} {}
+        done(false), single(in.pattern(p1),in.pattern(p2)) {}
     bool next(query& q)
     {
         if (done) return false;
