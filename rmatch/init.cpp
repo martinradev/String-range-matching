@@ -133,7 +133,7 @@ struct qstream_file : qstream {
             mstring a, b;
             s >> a >> b;
             if (a.empty()) continue;
-            if (b.empty()) q = query{false,in.pattern(a.c_str())};
+            if (b.empty()) q = query(in.pattern(a.c_str()));
             else q = query(in.pattern(a.c_str()),in.pattern(b.c_str()));
             return true;
         }
