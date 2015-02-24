@@ -1,3 +1,4 @@
+SHELL=/bin/bash
 MKDIR=mkdir -p
 RM=rm -rf
 CP=cp
@@ -74,9 +75,9 @@ SIMPLETESTDST=$(BINOUT)/$(SIMPLETEST)
 $(SIMPLETESTDST): $(SIMPLETESTSRC) | $(BINOUT)
 	$(CP) $< $@
 
-$(BINOUT)/$(RBIN): $(ROBJS) | $(BINOUT)
-	$(CXX) -o $@ $^ $(LDLIBS)
-$(BINOUT)/$(TBIN): $(TOBJS) | $(BINOUT) $(SIMPLETESTDST)
+$(RFULLBIN): $(ROBJS) | $(BINOUT)
+	$(CXX) -o $@ $^ $(LDLIBS) -lboost_regex
+$(TFULLBIN): $(TOBJS) | $(BINOUT) $(SIMPLETESTDST)
 	$(CXX) -o $@ $^ $(LDLIBS)
 $(GFULLBIN): $(GOBJS) | $(BINOUT)
 	$(CXX) -o $@ $^ $(LDLIBS)
@@ -135,7 +136,7 @@ $(LOCALTESTDATACUT): %$(CUTSUFFIX): % $(TESTSIZE)
 
 # generate fibonacci locally
 
-$(TESTFIB): $(GFULLBIN) $(TESTSIZE)
+$(TESTFIB): $(GFULLBIN) $(TESTSIZE) | $(TESTDATADIR)
 	$< | head -c $(TESTN) > $@
 
 .PHONY: patterns

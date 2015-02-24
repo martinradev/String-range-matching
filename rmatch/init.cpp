@@ -5,21 +5,22 @@
  */
 
 #include "rmatch.hpp"
+#include <boost/regex.hpp>
 #include <sstream>
-#include <regex>
 #include <fstream>
 #include <iterator>
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <getopt.h>
 
 using namespace std;
 
 typedef basic_stringstream<char,char_traits<char>,mallocator<char>> msstream;
 
-static const regex rpattern("\\[?(-?[0-9]+)?(\\.\\.|:)(-?[0-9]+)?\\[?",
-        regex::extended);
+static const boost::regex rpattern("\\[?(-?[0-9]+)?(\\.\\.|:)(-?[0-9]+)?\\[?",
+        boost::regex::extended);
 
 const char *shopts = "hm:k:sf:u:tcep:d";
 
@@ -100,6 +101,7 @@ bool readfile(const char *file, string_type& s)
 
 mstring input::pattern(const char *p) const
 {
+    using namespace boost;
     match_results<const char*,mallocator<sub_match<const char*>>> m;
     if (!extend || !regex_match(p,m,rpattern)) return mstring(p);
     // parse i:j
