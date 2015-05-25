@@ -2,7 +2,7 @@
 
 **rmatch** is a header-only library and a command line utility for [string range
 matching [1]](#1) written in C++11. It implements the following algorithms:
-  * Naive O(n+m) search iterating over all suffixes in the given text and
+  * Naive O(nm) search iterating over all suffixes in the given text and
     comparing given patterns lexicographically.
   * Z-algorithm based search in O(n+m) time and O(n+m) extra space.
   * Suffix array search that first constructs a suffix array of the given text
